@@ -1,0 +1,616 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<dom-module id="module-prediction-form">
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning"></style>
+    <style>
+         :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        #form {
+            margin: 0px auto 0px auto;
+            max-width: 1000px;
+            padding: 30px 25px 40px 25px;
+            border: 1px solid #c6d0da;
+            background-color: #FFFFFF;
+            box-shadow: 2px 6px 15px 8px rgba(0, 0, 0, 0.30);
+            background-color: #f5f5f5;
+        }
+
+        #title {
+            text-align: center;
+            color: var(--secondary-text-color);
+            font-weight: 300;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        #tissue {
+            overflow-y: scroll;
+            height: 200px;
+            border: 1px solid var(--divider-color);
+            background-color: var(--light-primary-color);
+            padding: 5px;
+        }
+
+        #pathwaysContent {
+            height: 300px;
+        }
+
+        stv-select-box {
+            width: 300px;
+            height: 150px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .key {
+            color: var(--secondary-text-color);
+        }
+
+        .button {
+            height: auto;
+            font-size: 18px;
+            border-radius: 5px;
+            background-color: var(--dark-button-color);
+            color: var(--text-primary-color);
+        }
+
+        .button:hover {
+            background-color: var(--light-button-color);
+        }
+
+        #jobBrowser {
+            width: 600px;
+            height: 300px;
+            border: 1px solid var(--divider-color);
+        }
+
+        #modelBox {
+            width: 350px;
+            margin-left: 10px;
+        }
+
+        #modelInfo {
+            box-sizing: border-box;
+            border: 1px solid var(--divider-color);
+            height: 300px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .stat-box {
+            box-sizing: border-box;
+            border: 1px solid var(--divider-color);
+            padding: 5px;
+            height: 150px;
+            width: 300px;
+            overflow-y: auto;
+        }
+    </style>
+    <template>
+        <form id="form" class="">
+            <div id="title">
+                Module Prediction
+            </div>
+
+            <!-- TYPE -->
+            <stv-form-box>
+                <div class="header">
+                    Type
+                </div>
+                <div class="container">
+                    <label class="stv-control">
+                        <input type="radio" name="type" value="train" checked="true" on-click="handleType">
+                        <span>Train new model</span>
+                    </label>
+                    <label class="stv-control">
+                        <input type="radio" name="type" value="test" on-click="handleType">
+                        <span>Test existing model</span>
+                    </label>
+
+                    <div hidden$="{{!isEqual('test',type)}}" class="horizontal layout wrap" style="margin-top:10px;">
+                        <div>
+                            <label class="stv">Existing models:</label>
+                            <stv-job-browser id="jobBrowser" on-jobselect="handleModelJobSelect" allowed-tools="{{predictionAllowedTool}}" user-data="{{userData}}" hide-status-filter hide-tool-filter disable-relaunch hide-notification-control view="done"></stv-job-browser>
+                        </div>
+                        <div id="modelBox">
+                            <label class="stv">Selected model information:</label>
+                            <div id="modelInfo">
+                                <span class="key">Design file: </span>{{modelDesignFile.name}}
+                                <br>
+                                <template is="dom-repeat" items="{{modelStats}}">
+                                    <div>
+                                        <span class="key">{{item.key}}: </span>{{item.value}}
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </stv-form-box>
+
+            <!-- INPUT DATA -->
+            <stv-form-box>
+                <div class="header">
+                    Input data
+                </div>
+                <div class="container">
+                    <stv-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}">
+                    </stv-file-origin>
+                </div>
+            </stv-form-box>
+
+
+            <!-- DESIGN DATA -->
+            <stv-form-box hidden$="{{!isEqual('train',type)}}">
+                <div class="header">
+                    Design data
+                </div>
+                <div class="container">
+                    <stv-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
+                    </stv-file-origin>
+
+                    <label class="stv">Expression matrix file stats:</label>
+                    <br>
+                    <div class="stat-box">
+                        <div hidden$="{{isEqual(inputSamples.length,0)}}">
+                            <label class="stv">Number of samples:</label> {{inputSamples.length}}
+                        </div>
+                        <template is="dom-repeat" items="{{designConditions}}" as="cond">
+                            <label class="stv">{{cond.name}}:</label> {{cond.count}} &nbsp; - &nbsp; {{cond.percent}}%
+                            <br>
+                        </template>
+                    </div>
+
+                    <!-- <div style="padding:5px 0 0 5px;">
+                        <label class="stv">Detected classes:</label>
+                        <stv-select-box options="{{designConditions}}" title-attribute="name" disable-selection>
+                        </stv-select-box>
+                    </div> -->
+                    <div hidden$="{{isStatsHidden(inputSamples)}}" style="margin:10px; 0 0 10px;">
+                        <div class="stv-note stv-note-warn" hidden$="{{!isStatsCountLow(inputSamples,designConditions)}}">
+                            Number of samples is not enough, please provide 10 or more samples per condition.
+                        </div>
+                        <div class="stv-note stv-note-warn" hidden$="{{isStatsPercentBalanced(inputSamples,designConditions)}}">
+                            Sample sizes between conditions are imbalanced,
+                            <br> Imbalanced dataset can produce suboptimal models which are biased.
+                        </div>
+                    </div>
+                </div>
+            </stv-form-box>
+
+
+            <!-- TRAIN METHOD -->
+            <stv-form-box hidden$="{{!isEqual('train',type)}}">
+                <div class="header">
+                    Train Method
+                </div>
+                <div class="container">
+                    <label class="stv-control">
+                        <input type="radio" name="train_method" value="RF" checked="true">
+                        <span>Random Forest</span>
+                    </label>
+                    <label class="stv-control">
+                        <input type="radio" name="train_method" value="SVM">
+                        <span>Support Vector Machines</span>
+                    </label>
+                    <!-- <label class="stv-control">
+                        <input type="radio" name="train_method" value="LDA">
+                        <span>Linear Discriminant Analysis</span>
+                    </label> -->
+                </div>
+            </stv-form-box>
+
+            <!-- SPECIES -->
+            <stv-form-box hidden$="{{!isEqual('train',type)}}">
+                <div class="header">
+                    Species
+                </div>
+                <div class="container horizontal layout center">
+                    <div>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="hsa" checked="true">
+                            <span>Human (Homo sapiens)</span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="mmu">
+                            <span>Mouse (Mus musculus)</span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="rno">
+                            <span>Rat (Rattus norvegicus)</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="dre">
+                            <span>Zebrafish (Danio rerio) </span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="dme">
+                            <span>Fruit fly (Drosophila melanogaster) </span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="cel">
+                            <span>Worm (Caenorhabditis elegans) </span>
+                        </label>
+                    </div>
+                </div>
+            </stv-form-box>
+
+            <!-- JOB INFORMATION -->
+            <stv-form-box>
+                <div class="header">
+                    Job information
+                </div>
+                <div class="container">
+                    <div>Output folder: &nbsp;
+                        <stv-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
+                        </stv-file-origin>
+                    </div>
+                    <br>
+                    <label class="stv">Job name:</label>
+                    <input type="text" id="jobName" class="stv" style="width:200px;" value="" />
+                    <label class="stv">Description:</label>
+                    <textarea id="jobDescription" class="stv" style="width:200px;"></textarea>
+                </div>
+            </stv-form-box>
+
+            <div class="horizontal layout center-justified">
+                <div class="stv-btn stv-btn-shdw stv-btn-big button" on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
+            </div>
+        </form>
+    </template>
+
+    <script>
+        Polymer({
+            is: "module-prediction-form",
+            behaviors: [StvFormBehaviour],
+            properties: {
+                type: {
+                    type: String,
+                    value: 'train'
+                },
+                predictionAllowedTool: {
+                    type: Array,
+                    value: ['metabolizer.module-prediction-train']
+                },
+                designConditions: {
+                    type: Array,
+                    value: function() {
+                        return []
+                    }
+                },
+                inputSamples: {
+                    type: Array,
+                    value: function() {
+                        return []
+                    }
+                },
+                modelJob: {
+                    type: Object
+                },
+                modelStats: {
+                    type: Array
+                },
+                modelDesignFile: {
+                    type: Object
+                },
+                modelFile: {
+                    type: Object
+                },
+                matrixBioformat: {
+                    type: Array,
+                    value: [BIOFORMATS["DATAMATRIX_EXPRESSION"]]
+                },
+                designBioformat: {
+                    type: Array,
+                    value: [BIOFORMATS["EXPERIMENTAL_DESIGN"]]
+                }
+            },
+            clean: function() {
+                this.clearAllErrors();
+                this.$.jobName.value = '';
+                this.$.jobDescription.value = '';
+                this.$.exp_file.reset();
+                this.$.design_file.reset();
+                this.$.output_folder.reset();
+                this.$.form.elements['species'].value = 'hsa';
+                this.$.form.elements['train_method'].value = 'RF';
+                this.set('designConditions', []);
+
+                this.set('modelJob', null);
+                this.set('modelStats', []);
+                this.set('modelDesignFile', null);
+                this.set('modelFile', null);
+            },
+            handleType: function(e) {
+                this.set('type', e.currentTarget.value);
+                this.clean();
+            },
+            handleModelJobSelect: function(e) {
+                e.stopPropagation();
+                var me = this;
+                this.set('modelJob', e.detail);
+                async.waterfall([
+                    function(callback) {
+                        SteviaManager.getPlainFolderFiles(me.modelJob.options.design_file.value, function(files) {
+                            me.set('modelDesignFile', files[0]);
+                            callback(null);
+                        });
+                    },
+                    function(callback) {
+                        SteviaManager.getPlainFolderFiles(me.modelJob.folder._id, function(files) {
+                            me.set('fileNameMap', {});
+                            for (var i = 0; i < files.length; i++) {
+                                var f = files[i];
+                                me.fileNameMap[f.name] = f;
+                            }
+                            me.set('modelFile', me.fileNameMap[me.modelJob.options.train_method.value + '.RData']);
+                            callback(null);
+                        });
+                    },
+                    function(callback) {
+                        SteviaManager.getFileContent(me.fileNameMap['model_stats.txt']._id, function(textContent) {
+                            var modelStats = [];
+                            var lines = textContent.split('\n');
+                            var line, fields, field;
+                            if (lines.length > 0) {
+                                for (var i = 1; i < lines.length; i++) {
+                                    line = lines[i];
+                                    if (line != '') {
+                                        fields = line.split('\t');
+                                        modelStats.push({
+                                            key: fields[0],
+                                            value: fields[1]
+                                        });
+                                    }
+                                }
+                            }
+                            me.set('modelStats', modelStats);
+                            callback(null, 'done');
+                        });
+                    }
+                ], function(err, result) {
+                    console.log(result);
+                });
+            },
+            checkDesignFile: function(e) {
+                var file = e.currentTarget.selectedFile;
+                // this._getConditionsFromDesignFile(file._id);
+                this._getSamplesFromDesignFile(file._id);
+            },
+            _getConditionsFromDesignFile: function(fileId) {
+                var me = this;
+                SteviaManager.getFileContent(fileId, function(content) {
+                    var conditionMap = {};
+                    var conditionArray = [];
+                    var line, fields, field;
+                    var lines = content.split('\n');
+                    var isNumber;
+                    if (lines.length > 0) {
+                        for (var i = 0; i < lines.length; i++) {
+                            line = lines[i];
+                            if (line != '') {
+                                fields = line.split('\t');
+                                if (conditionMap[fields[1]] !== true) {
+                                    conditionMap[fields[1]] = true;
+                                    conditionArray.push({
+                                        name: fields[1]
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    me.set('designConditions', conditionArray);
+                });
+            },
+            _getSamplesFromDesignFile: function(fileId) {
+                var me = this;
+                SteviaManager.getFileContent(fileId, function(content) {
+                    var sampleArray = [];
+                    var line, fields, field, sample, condition;
+                    var lines = content.split('\n');
+                    var isNumber;
+                    if (lines.length > 0) {
+                        for (var i = 0; i < lines.length; i++) {
+                            line = lines[i];
+                            if (line != '') {
+                                fields = line.split('\t');
+                                sample = fields[0].trim();
+                                condition = fields[1].trim();
+                                sampleArray.push({
+                                    text: sample + ' - ' + condition,
+                                    sample: sample,
+                                    condition: condition
+                                });
+                            }
+                        }
+                    }
+                    me.set('inputSamples', sampleArray);
+                    var conditionMap = {};
+                    var conditionArray = [];
+                    var slength = sampleArray.length;
+                    for (var i = 0; i < slength; i++) {
+                        var s = sampleArray[i];
+                        if (conditionMap[s.condition] == null) {
+                            conditionMap[s.condition] = {
+                                name: s.condition,
+                                count: 0,
+                                percent: 0
+                            };
+                            conditionArray.push(conditionMap[s.condition]);
+                        }
+                        conditionMap[s.condition].count++;
+                        conditionMap[s.condition].percent = conditionMap[s.condition].count / slength * 100;
+                    }
+                    me.set('designConditions', conditionArray);
+                });
+            },
+            launchJob: function(e) {
+                var me = this;
+                this.clearAllErrors();
+
+                var query = {
+                    sid: Cookies("bioinfo_sid"),
+                    name: this.$.jobName.value,
+                    description: this.$.jobDescription.value
+                };
+                if (this.$.output_folder.selectedFile != null) {
+                    query.outdirId = this.$.output_folder.selectedFile._id;
+                }
+                if (this.$.jobName.value == '') {
+                    query['name'] = 'Module Prediction ' + this.type + ''
+                }
+
+                var args = {
+                    tool: 'metabolizer',
+                    execution: 'module-prediction-' + this.type,
+                    executable: 'module-prediction-' + this.type + '.sh',
+                    options: {
+                        "output_folder": {
+                            out: true,
+                        }
+                    }
+                };
+
+                if (this.$.exp_file.selectedFile == null) {
+                    this.setError(this.$.exp_file, 'No expression matrix file selected');
+                } else {
+                    args.options['exp_file'] = {
+                        type: 'file',
+                        mode: 'id',
+                        value: this.$.exp_file.selectedFile._id
+                    };
+                }
+
+                if (this.type === 'train') {
+                    if (this.$.design_file.selectedFile == null) {
+                        this.setError(this.$.design_file, 'No experimental design file selected');
+                    } else {
+                        args.options['design_file'] = {
+                            type: 'file',
+                            mode: 'id',
+                            value: this.$.design_file.selectedFile._id
+                        };
+                    }
+
+                    args.options['train_method'] = {
+                        type: 'text',
+                        value: this.$.form.elements['train_method'].value
+                    };
+                    args.options['species'] = {
+                        type: 'text',
+                        value: this.$.form.elements['species'].value
+                    };
+
+                } else if (this.type === 'test') {
+                    if (this.modelFile == null) {
+                        this.setError(this.$.modelBox, 'No model selected, please select one.');
+                    } else {
+                        args.options['model_file'] = {
+                            type: 'file',
+                            mode: 'id',
+                            value: this.modelFile._id
+                        };
+                        args.options['species'] = {
+                            type: 'text',
+                            value: this.modelJob.options.species.value
+                        };
+                    }
+                }
+
+                console.log(query);
+                console.log(args);
+                if (this.hasErrors == false && this.$.form.checkValidity()) {
+                    console.log('Launching');
+                    // return;
+                    me._createJob(query, args);
+                }
+            },
+            _createJob: function(query, args) {
+                var me = this;
+                SteviaManager.jobs.create({
+                    query: query,
+                    request: {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(args),
+                        success: function(response) {
+                            if (response.response[0].error == null) {
+                                console.log(response);
+                                // var job = response.response[0].result[0];
+                                // console.log(job);
+                                me.clean();
+                                me.fire('job-launched');
+                                me.fire('need-refresh');
+                                //                                    me.message = job.commandLine;
+                            } else {
+                                me.message = response.response[0].errorMsg;
+                            }
+                        },
+                        error: function() {
+                            me.message = 'Server error, try again later.';
+                        }
+                    }
+                });
+            },
+            isStatsHidden: function(inputSamples) {
+                if (inputSamples && inputSamples.length > 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            isStatsCountLow: function(inputSamples, designConditions) {
+                if (inputSamples.length == 0) {
+                    return false;
+                }
+                if (inputSamples && inputSamples.length > 10) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            isStatsPercentBalanced: function(inputSamples, designConditions) {
+                var max;
+                var min;
+                for (var i = 0; i < designConditions.length; i++) {
+                    var dc = designConditions[i];
+                    if (max == null) {
+                        max = dc.percent
+                    }
+                    if (min == null) {
+                        min = dc.percent
+                    }
+                    if (dc.percent < min) {
+                        min = dc.percent;
+                    }
+                    if (dc.percent > max) {
+                        max = dc.percent;
+                    }
+                }
+                var diff = max - min;
+                if (isNaN(diff)) {
+                    return true;
+                }
+                if (diff > 25) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+        });
+    </script>
+</dom-module>

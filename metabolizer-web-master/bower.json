@@ -1,0 +1,16 @@
+{
+    "name": "metabolizer-web",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "stevia-elements": "https://github.com/frasator/stevia-elements.git#master",
+        "network-viewer": "https://github.com/frasator/network-viewer.git#master",
+        "pathway-viewer": "http://github.com/frasator/pathway-viewer.git#master"
+    },
+    "private": true
+}

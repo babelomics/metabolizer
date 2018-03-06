@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=0.6, user-scalable=yes">
+        <title>Metabolizer</title>
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <!-- Chrome for Android theme color -->
+        <!--<meta name="theme-color" content="#303F9F">-->
+        <meta name="theme-color" content="#000000">
+
+        <!-- Web Application Manifest -->
+        <link rel="manifest" href="manifest.json">
+
+        <!-- Windows Theme color -->
+        <meta name="msapplication-TileColor" content="#3372DF">
+
+        <!-- Add to homescreen for Chrome on Android -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="application-name" content="Metabolizer">
+
+        <!-- Add to homescreen for Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Metabolizer">
+
+        <!-- Force Microsoft use latest web tech -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <!-- END meta -->
+
+        <!--Config-->
+        <script src="conf/config.js"></script>
+        <script src="conf/bioformats.js"></script>
+
+        <!--Fonts-->
+        <link href='bower_components/stevia-elements/fonts/fonts.css' rel='stylesheet' type='text/css'>
+        <link href='bower_components/fontawesome/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+        <!--CSS-->
+        <link href='bower_components/stevia-elements/css/global.css' rel='stylesheet' type='text/css'>
+        <link href='bower_components/stevia-elements/css/form.css' rel='stylesheet' type='text/css'>
+        <link href='bower_components/stevia-elements/css/context.css' rel='stylesheet' type='text/css'>
+
+
+        <!--Web Components-->
+        <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+
+        <link rel="import" href="metabolizer-element.html">
+
+        <link rel="import" href="conf/theme.html">
+
+    </head>
+
+    <body unresolved class="fullbleed">
+        <metabolizer-element version="0.0.1"></metabolizer-element>
+        <script>
+            var metabolizer = document.querySelector('metabolizer-element');
+        </script>
+    </body>
+
+</html>

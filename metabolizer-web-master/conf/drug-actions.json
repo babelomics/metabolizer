@@ -1,0 +1,145 @@
+[{
+    "name": "acetylation",
+    "value": 0.1
+}, {
+    "name": "activator",
+    "value": 2
+}, {
+    "name": "adduct",
+    "value": 0.1
+}, {
+    "name": "agonist",
+    "value": 2
+}, {
+    "name": "allosteric modulator",
+    "value": 0.1
+}, {
+    "name": "antagonist",
+    "value": 0.1
+}, {
+    "name": "Antagonist",
+    "value": 0.1
+}, {
+    "name": "antibody",
+    "value": 0.1
+}, {
+    "name": "binder",
+    "value": 0.1
+}, {
+    "name": "binding",
+    "value": 0.1
+}, {
+    "name": "blocker",
+    "value": 0.1
+}, {
+    "name": "chaperone",
+    "value": 0.1
+}, {
+    "name": "chelator",
+    "value": 0.1
+}, {
+    "name": "cleavage",
+    "value": 0.1
+}, {
+    "name": "cofactor",
+    "value": 0.1
+}, {
+    "name": "component of",
+    "value": 0.1
+}, {
+    "name": "conversion inhibitor",
+    "value": 0.1
+}, {
+    "name": "cross-linking/alkylation",
+    "value": 0.1
+}, {
+    "name": "desensitize the target",
+    "value": 0.1
+}, {
+    "name": "inactivator",
+    "value": 0.1
+}, {
+    "name": "incorporation into and destabilization",
+    "value": 0.1
+}, {
+    "name": "inducer",
+    "value": 2
+}, {
+    "name": "inhibitor",
+    "value": 0.1
+}, {
+    "name": "Inhibitor",
+    "value": 0.1
+}, {
+    "name": "inhibitor, competitive",
+    "value": 0.1
+}, {
+    "name": "inhibitory allosteric modulator",
+    "value": 0.1
+}, {
+    "name": "intercalation",
+    "value": 0.1
+}, {
+    "name": "inverse agonist",
+    "value": 0.1
+}, {
+    "name": "ligand",
+    "value": 0.1
+}, {
+    "name": "metabolizer",
+    "value": 0.1
+}, {
+    "name": "modulator",
+    "value": 0.1
+}, {
+    "name": "multitarget",
+    "value": 0.1
+}, {
+    "name": "negative modulator",
+    "value": 0.1
+}, {
+    "name": "neutralizer",
+    "value": 0.1
+}, {
+    "name": "other",
+    "value": 0.1
+}, {
+    "name": "Other",
+    "value": 0.1
+}, {
+    "name": "other/unknown",
+    "value": 0.1
+}, {
+    "name": "partial agonist",
+    "value": 1
+}, {
+    "name": "partial antagonist",
+    "value": 1
+}, {
+    "name": "positive allosteric modulator",
+    "value": 2
+}, {
+    "name": "positive modulator",
+    "value": 2
+}, {
+    "name": "potentiator",
+    "value": 2
+}, {
+    "name": "product of",
+    "value": 0.1
+}, {
+    "name": "reducer",
+    "value": 0.1
+}, {
+    "name": "stimulator",
+    "value": 2
+}, {
+    "name": "substrate",
+    "value": 0.1
+}, {
+    "name": "suppressor",
+    "value": 0.1
+}, {
+    "name": "unknown",
+    "value": 0.1
+}]

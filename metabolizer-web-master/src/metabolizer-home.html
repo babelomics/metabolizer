@@ -1,0 +1,143 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<dom-module id="metabolizer-home">
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
+         :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            font-size: 22px;
+            font-weight: 300;
+            padding-top: 2vh;
+            color: var(--text-primary-color);
+        }
+
+        #main {
+            margin: 0px auto 0px auto;
+            max-width: 785px;
+            padding: 2vh;
+        }
+
+        #image {
+            width: 300px;
+            margin: 10px;
+        }
+
+        #button {
+            font-weight: 400;
+            height: auto;
+            margin: 20px;
+            padding: 20px 30px;
+            font-size: 26px;
+            border-radius: 5px;
+            background-color: var(--dark-button-color);
+        }
+
+        #button:hover {
+            background-color: var(--light-button-color);
+        }
+
+        .application {
+            font-size: 80px;
+            text-shadow: 3px 3px 5px var(--dark-primary-color);
+        }
+
+        .description {
+            font-size: 24px;
+            line-height: 40px;
+            padding-top: 30px;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        @media (max-width: 1100px) {
+            #image {
+                width: 230px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            #image {
+                width: 150px;
+            }
+            .megatitle {
+                font-size: 50px;
+            }
+        }
+
+        .paragraph {
+            text-align: justify;
+            padding: 10px 0;
+        }
+
+        .paragraph2 {
+            font-size: 14px;
+            padding: 0 0 10px 0;
+        }
+
+        .title {
+            font-size: 40px;
+            padding-top: 30px;
+            padding-bottom: 10px;
+        }
+
+        .title2 {
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+
+        .b {
+            font-weight: 400;
+        }
+
+        a,
+        a:visited {
+            text-decoration: none;
+            color: var(--accent-color);
+        }
+    </style>
+    <template>
+
+        <div id="main">
+            <div class="horizontal layout center-justified center">
+                <div>
+                    <!-- <img id="image" src="../images/Leaf_icon_03.svg"> -->
+                </div>
+                <div class="vertical layout center">
+                    <div class="application vertical layout center">
+                        <span style="font-weight:normal;"> Metabolizer</span>
+                    </div>
+                    <div class="description">
+                            <!-- M</b>etabol<b>i</b>c Mo<b>d</b>ule <b>A</b>nalysis <b>S</b>uite --> Metabolic Module Analysis Suite
+                    </div>
+                    <br>
+                    <div id="button" class="stv-btn stv-btn-shdw" on-click="handleStart">
+                        <i class="fa fa-paper-plane"></i> &nbsp; Start
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="title">Overview:</div> -->
+            <div class="paragraph">
+                Metabolizer is a web tool for analysis of modular architecture of metabolic pathways using transcriptomic data. Metabolizer calculates impact of modules on production of metabolites. These modules are conserved part of metabolism which starts with substrate(s) and ends with a product.
+            </div>
+
+            <div class="title2">Note:</div>
+            <div class="paragraph2">
+                This web application makes an intensive use of the HTML5 standard and other cutting-edge web technologies such as Web Components, so only modern web browsers are fully supported.
+            </div>
+        </div>
+
+
+    </template>
+    <script>
+        Polymer({
+            is: 'metabolizer-home',
+            handleStart: function() {
+                this.fire('start');
+            }
+        })
+    </script>
+</dom-module>

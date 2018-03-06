@@ -1,0 +1,82 @@
+<style is="custom-style">
+    :root {
+        --dark-primary-color: #212121;
+        --default-primary-color: #2f2f2f;
+        --light-primary-color: #fafafa;
+        --light-secondary-color: #EDEDED;
+        --text-primary-color: #FFFFFF;
+        --accent-color: #DAA520;
+        --light-button-color: #ecb121;
+        --dark-button-color: #d09300;
+        --primary-text-color: #212121;
+        --secondary-text-color: #727272;
+        --divider-color: #ccc;
+        --hover-color: #eee;
+        --selected-color: #bbb;
+
+        /*--accent-color: #c34a4a;
+        --light-button-color: #eb3838;
+        --dark-button-color: #d52020;*/
+        /*--accent-color: #DAA520;
+        --light-button-color: #ecb121;
+        --dark-button-color: #c3931b;*/
+        /*--accent-color: #CEEA33;
+        --light-button-color: #e1ff38;
+        --dark-button-color: #c2dd2f;*/
+
+        /*--dark-primary-color: #d5d5d5;
+        --default-primary-color: #e0e0e0;
+        --light-primary-color: #fafafa;
+        --light-secondary-color: #EDEDED;
+        --text-primary-color: #111;
+        --accent-color: #718500;
+        --light-button-color: #e1ff38;
+        --dark-button-color: #c2dd2f;
+        --primary-text-color: #212121;
+        --secondary-text-color: #727272;
+        --divider-color: #ccc;
+        --hover-color: #eee;
+        --selected-color: #bbb;*/
+    }
+</style>
+<style>
+    [hidden] {
+        display: none !important;
+    }
+
+    html,
+    body {
+        font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, 'sans-serif' !important;
+        font-size: 13px;
+    }
+
+    body.fullbleed {
+        margin: 0;
+        height: 100vh;
+    }
+
+    body[unresolved] {
+        opacity: 0;
+        display: block;
+        overflow: hidden;
+        position: relative;
+    }
+
+    body {
+        transition: opacity ease-in 0.2s;
+    }
+
+    a {
+        transition: color 0.1s linear;
+        text-decoration: none;
+        color: var(--text-primary-color);
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    stv-header > .main {
+        font-weight: 300;
+    }
+</style>

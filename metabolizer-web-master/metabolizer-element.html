@@ -1,0 +1,538 @@
+<script src="bower_components/stevia-elements/src/manager/stevia-manager.js"></script>
+
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<script src="bower_components/cookies-js/dist/cookies.min.js"></script>
+<script src="bower_components/crypto-js/core.js"></script>
+<script src="bower_components/crypto-js/sha1.js"></script>
+<script src="bower_components/async/dist/async.js"></script>
+
+<link rel="import" href="bower_components/stevia-elements/src/stv-header.html">
+<link rel="import" href="bower_components/stevia-elements/src/stv-application-behavior.html">
+<link rel="import" href="bower_components/stevia-elements/src/stv-footer.html">
+<link rel="import" href="bower_components/stevia-elements/src/stv-select.html">
+<link rel="import" href="bower_components/stevia-elements/src/stv-select-box.html">
+<link rel="import" href="bower_components/stevia-elements/src/stv-panel.html">
+<link rel="import" href="bower_components/stevia-elements/src/dropdown/stv-dropdown.html">
+<link rel="import" href="bower_components/stevia-elements/src/stv-feedback.html">
+<link rel="import" href="bower_components/stevia-elements/src/stv-launcher/stv-launcher.html">
+
+<link rel="import" href="bower_components/stevia-elements/src/table/stv-table.html">
+<link rel="import" href="bower_components/stevia-elements/src/form/stv-file-origin.html">
+<link rel="import" href="bower_components/stevia-elements/src/form/stv-form-behaviour.html">
+<link rel="import" href="bower_components/stevia-elements/src/file/stv-file-browser.html">
+<link rel="import" href="bower_components/stevia-elements/src/job/stv-job-browser.html">
+<link rel="import" href="bower_components/stevia-elements/src/stv-cluster-status.html">
+<link rel="import" href="bower_components/stevia-elements/src/report/stv-report.html">
+
+
+<link rel="import" href="src/metabolizer-home.html">
+<link rel="import" href="src/module-activity-form.html">
+<link rel="import" href="src/module-knockout-form.html">
+<link rel="import" href="src/module-prediction-form.html">
+
+<dom-module id="metabolizer-element">
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
+         :host {
+            display: block;
+            position: relative;
+            cursor: default;
+            font-size: 13px;
+            background-color: var(--default-primary-color);
+            height: 100%;
+            width: 100%;
+        }
+
+        stv-header {
+            position: absolute;
+            top: 0;
+        }
+
+        stv-footer {
+            position: absolute;
+            bottom: 0;
+        }
+
+        .content {
+            position: absolute;
+            width: 100%;
+            top: 50px;
+            /*height: calc(100vh - 60px);*/
+            /*background-color: transparent;*/
+        }
+
+        #fileBrowserPanel {
+            position: absolute;
+            top: 0px;
+            left: 0;
+            width: 600px;
+            height: 400px;
+            min-width: 600px;
+            min-height: 400px;
+        }
+
+        #jobBrowserPanel {
+            position: absolute;
+            top: 0px;
+            right: 0;
+            width: 600px;
+            height: 400px;
+            min-width: 600px;
+            min-height: 400px;
+        }
+
+        #fileBrowser {}
+
+        #jobBrowser {}
+
+        @media (max-width: 1460px) {
+            span.description {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 1220px) {
+            div.title {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 1090px) {
+            div.icon {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 1090px) {
+            stv-header ::content #right .option-text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 800px) {
+            stv-header ::content .option-text {
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 700px) {
+            stv-header ::content .option-text {
+                display: none;
+            }
+        }
+
+        .userid {
+            color: var(--accent-color);
+            font-size: 16px;
+        }
+
+        #description {
+            color: var(--accent-color);
+            font-weight: normal;
+        }
+
+        metabolizer-home {
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        module-activity-form,
+        module-knockout-form,
+        module-prediction-form,
+        stv-report {
+            height: calc(100vh - 50px);
+            overflow-y: auto;
+        }
+
+        #context {
+            position: fixed;
+            top: 0;
+            left: 0;
+            /*width: 200px;*/
+            box-shadow: 2px 2px 16px 2px rgba(125, 125, 125, 0.5);
+            background-color: var(--light-primary-color);
+            border: 1px solid var(--divider-color);
+            padding: 10px 10px 10px 10px;
+        }
+    </style>
+    <template>
+
+        <div class="content" menu-option="home">
+            <metabolizer-home id="home" on-start="handleHomeStart" isLogged="{{isLogged}}"></metabolizer-home>
+        </div>
+        <div class="content" menu-option="module-activity">
+            <module-activity-form id="moduleActivity" bioformats="{{bioformats}}" user-data="{{userData}}" on-job-launched="handleJobLaunched"></module-activity-form>
+        </div>
+        <div class="content" menu-option="module-knockout">
+            <module-knockout-form id="moduleKnockout" bioformats="{{bioformats}}" user-data="{{userData}}" on-job-launched="handleJobLaunched" on-jobselect="handleJobSelect"></module-knockout-form>
+        </div>
+        <div class="content" menu-option="module-prediction">
+            <module-prediction-form id="modulePrediction" bioformats="{{bioformats}}" user-data="{{userData}}" on-job-launched="handleJobLaunched" on-jobselect="handleJobSelect"></module-prediction-form>
+        </div>
+        <div id="jobContent" class="content" menu-option="job">
+            <stv-report id="report" on-select-category="handleSelectCategory" on-select-circuit="handleSelectCircuit"></stv-report>
+            <div id="context" hidden></div>
+        </div>
+        <div class="content" menu-option="home,form,job,module-activity,module-knockout,module-prediction">
+            <stv-panel id="fileBrowserPanel" hidden collapsible movable closable expandible resizable on-hidden="handlePanelHidden">
+                <div class="header">
+                    <i class="fa fa-cloud"></i>&nbsp; Browse my data
+                </div>
+                <stv-file-browser id="fileBrowser" class="container flex" on-fileselect="handleFileSelect" bioformats="{{bioformats}}" user-data="{{userData}}">
+                </stv-file-browser>
+            </stv-panel>
+            <stv-panel id="jobBrowserPanel" hidden collapsible movable closable resizable on-hidden="handlePanelHidden">
+                <div class="header">
+                    <i class="fa fa-flask"></i>&nbsp; Browse my jobs
+                </div>
+                <stv-job-browser id="jobBrowser" class="container flex" on-jobselect="handleJobSelect" allowed-tools="{{allowedTools}}" user-data="{{userData}}" disable-relaunch="{{disableRelaunch}}">
+                </stv-job-browser>
+            </stv-panel>
+            <stv-feedback id="feedback" hidden on-feedbackend="handleFeedback"></stv-feedback>
+        </div>
+
+
+        <stv-header id="stvHeader" hide-jobs hide-browse selected-option="{{selectedOption}}" user-data="{{userData}}" on-login="handleLogin" on-logout="handleLogout">
+            <div class="icon">
+                <!-- <img src="images/Leaf_icon_03.svg" style="height: 54px;margin: 8px 3px 0 0;"> -->
+            </div>
+            <div class="title horizontal layout center" style="margin-left:15px;">
+                <span style="font-weight:normal;">Metabolizer</span>
+            </div>
+            <span id="description" class="description">
+                Metabolic Module Analysis
+            </span>
+
+            <div id="menu" class="menu horizontal layout center flex">
+                <!-- <div class="flex"></div> -->
+                <div style="margin-left:4vw;"></div>
+                <div title="" class="option" on-click="handleMenuOption" data-option="home">
+                    <i class="fa fa-home"></i>
+                    <span class="option-text">Home</span>
+                </div>
+                <div style="margin-left:2vw;"></div>
+                <div title="" class="option" on-click="handleMenuOption" login-required data-option="module-activity">
+                    <i class="fa fa-usb fa-flip-vertical"></i>
+                    <span class="option-text">Activity</span>
+                </div>
+                <div title="" class="option" on-click="handleMenuOption" login-required data-option="module-knockout">
+                    <i class="fa fa-bolt"></i>
+                    <span class="option-text">Knockout</span>
+                </div>
+                <div title="" class="option" on-click="handleMenuOption" login-required data-option="module-prediction">
+                    <i class="fa fa-magic"></i>
+                    <span class="option-text">Prediction</span>
+                </div>
+                <div class="flex" style="margin-left:2vw;"></div>
+                <div title="Browse my data" class="option" on-click="handleMenuPanel" login-required data-panel="fileBrowserPanel">
+                    <i class="fa fa-cloud"></i>
+                    <span class="option-text">My data</span>
+                </div>
+                <div title="Browse my jobs" class="option" on-click="handleMenuPanel" login-required data-panel="jobBrowserPanel">
+                    <i class="fa fa-flask"></i>
+                    <span class="option-text">My jobs</span>
+                </div>
+                <div style="margin-left:2vw;"></div>
+            </div>
+
+            <!-- <stv-launcher class="launcher" dropdown-position="left" data-src="conf/test-apps.json">
+                <i class="fa fa-th"></i>
+            </stv-launcher> -->
+
+            <stv-cluster-status id="clusterStatus" type="dark" class="cluster-status"></stv-cluster-status>
+
+            <stv-dropdown dark class="helpmenu">
+                <div data-button><i class="fa fa-question-circle"></i></div>
+                <ul data-menu>
+                    <a href="http://metabolizer.babelomics.org/doc/doku.php" target="_blank">
+                        <li>
+                            <i class="fa fa-book"></i> &nbsp; Documentation
+                        </li>
+                    </a>
+                    <li data-divider>
+                    </li>
+                    <li on-mousedown="handleExample" data-example-name="activity">
+                        <i class="fa fa-lightbulb-o"></i> &nbsp; Activity example
+                    </li>
+                    <li on-mousedown="handleExample" data-example-name="knockout">
+                        <i class="fa fa-lightbulb-o"></i> &nbsp; Knockout example
+                    </li>
+                    <li on-mousedown="handleExample" data-example-name="train">
+                        <i class="fa fa-lightbulb-o"></i> &nbsp; Train example
+                    </li>
+                    <li on-mousedown="handleExample" data-example-name="test">
+                        <i class="fa fa-lightbulb-o"></i> &nbsp; Test example
+                    </li>
+                    <!-- <li on-mousedown="handleFeedback">
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp; Send an email
+                    </li>
+                    <a href="http://gitlab.bioinfo.cipf.es/stevia/stevia-elements/issues" target="_blank">
+                        <li>
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i> &nbsp; Go to git issue
+                        </li>
+                    </a> -->
+                </ul>
+            </stv-dropdown>
+        </stv-header>
+
+        <stv-footer menu-option="home,login,signup,profile,remember" class="horizontal layout center center-justified" style="padding:0 20px;">
+            <div style="text-align:center;">
+                Metabolizer by <span style="font-weight:bold;">Computational Genomics Department</span>
+                <br> Principe Felipe Research Center, Valencia, Spain 2017</div>
+        </stv-footer>
+    </template>
+
+    <script>
+        Polymer({
+            is: "metabolizer-element",
+            behaviors: [StvApplicationBehavior],
+            properties: {
+                allowedTools: {
+                    type: Array,
+                    value: function() {
+                        return [
+                            'metabolizer.module-activity',
+                            'metabolizer.module-knockout-init',
+                            'metabolizer.module-prediction-train',
+                            'metabolizer.module-prediction-test',
+                            'utils.report',
+                            'utils.example'
+                        ];
+                    }
+                },
+                bioformats: {
+                    type: Array,
+                    notify: true,
+                    value: [BIOFORMATS["DATAMATRIX_EXPRESSION"], BIOFORMATS["VARIANT"], BIOFORMATS["EXPERIMENTAL_DESIGN"]]
+                },
+                drugActionList: {
+                    type: Array,
+                    notify: true
+                },
+                drugActionMap: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            listeners: {
+                'open-job-folder': 'handleOpenJobFolder'
+            },
+            ready: function() {
+                var me = this;
+                this.$.report.addEventListener('leftclickvertex', function(e) {
+                    me.hideContext();
+                    if (e.target.tagName == 'PATHWAY-DRUG-VIEWER') {
+                        var pdv = e.target;
+                        var pv = pdv.$.pathwayViewer;
+                        var v = e.detail.vertex;
+                        var att = v.attributes;
+                        var isModule = false;
+                        for (var j = 0; j < pv.circuits.length; j++) {
+                            c = pv.circuits[j];
+                            if (att[c.id] == "1") {
+                                isModule = true;
+                                break;
+                            }
+                        }
+                        if (isModule && v.id.indexOf("_func") == -1 && v.attributes.shape != "circle") {
+                            pdv._showKoControl(e.detail.x, e.detail.y);
+                        } else {
+                            pdv._hideKoControl();
+                        }
+                    }
+                });
+                this.$.report.addEventListener('rightclickvertex', function(e) {
+                    var v = e.detail.vertex;
+                    me.$.context.style.left = e.detail.x + 'px';
+                    me.$.context.style.top = e.detail.y + 'px';
+
+                    var aux = ['<b>Name</b>:<br>',
+                        '<a target="_blank" href="', v.attributes['KEGGLink'], '">',
+                        v.attributes['KEGGinfo'], ' <i class="fa fa-external-link"></i></a>'
+                    ];
+                    if (v.attributes['KEGGenzyme'] != 'Not available') {
+                        aux.push('<br><br><b>Enzyme</b>:<br>',
+                            '<a target="_blank" href="', v.attributes['KEGGenzymeLink'], '">',
+                            v.attributes['KEGGenzyme'], ' <i class="fa fa-external-link"></i></a>');
+                    }
+                    me.$.context.innerHTML = aux.join('');
+                    me.$.context.removeAttribute('hidden');
+                });
+                this.$.report.addEventListener('selectback', function(e) {
+                    me.hideContext();
+                });
+            },
+            handleJobLaunched: function() {
+                this.$.jobBrowserPanel.show();
+            },
+            handleOpenJobFolder: function(e) {
+                var job = e.detail;
+                this.$.fileBrowser.set('folder', job.folder);
+                this.$.fileBrowserPanel.show();
+            },
+            handleFileSelect: function(e) {},
+            handleJobSelect: function(e) {
+                var me = this;
+                var job = e.detail;
+                if (job && job.status === 'DONE') {
+                    this.set('selectedOption', 'job');
+                    this.$.report.hideJobInformation = true;
+                    this.$.report.set('job', job);
+                }
+            },
+            handleExample: function(e) {
+                if (this.$.stvHeader.isLogged != true) {
+                    this._lastExampleRequest = e.currentTarget.dataset['exampleName'];;
+                    this.$.stvHeader.anonymousSign();
+                } else {
+                    this.runExample(e.currentTarget.dataset['exampleName']);
+                    this.$.jobBrowserPanel.show();
+                }
+            },
+            runExample: function(ex) {
+                var me = this;
+                var folderName;
+                switch (ex) {
+                    case 'activity':
+                        folderName = 'Module_activity_BRCA-1';
+                        break;
+                    case 'knockout':
+                        folderName = 'Module_knockout_Auto_KO_BRCA';
+                        break;
+                    case 'train':
+                        folderName = 'SVM_BRCA_Train';
+                        break;
+                    case 'test':
+                        folderName = 'SVM_BRCA_Test';
+                        break;
+                    default:
+                }
+                SteviaManager.jobs.example({
+                    query: {
+                        folderName: folderName,
+                        tool: 'metabolizer',
+                        execution: 'example'
+                    },
+                    request: {
+                        method: 'GET',
+                        success: function(response) {
+                            me.$.jobBrowserPanel.show();
+                        },
+                        error: function(response) {
+
+                        }
+                    }
+                });
+            },
+            handleLogin: function() {
+                if (this._lastExampleRequest) {
+                    this.runExample(this._lastExampleRequest);
+                    this._lastExampleRequest = null;
+                } else {
+                    if (Cookies('bioinfo_user').indexOf("anonymous___") != -1) {
+                        this.setMenu('module-activity');
+                    } else {
+                        this.setMenu('home');
+                    }
+                }
+                this.$.home.isLogged = true;
+            },
+            handleLogout: function() {
+                this.$.home.isLogged = false;
+                this.setMenu('home');
+            },
+            handleHomeStart: function() {
+                if (this.$.stvHeader.isLogged != true) {
+                    this.$.stvHeader.anonymousSign();
+                } else {
+                    this.setMenu('module-activity');
+                }
+            },
+            handleFeedback: function() {
+                this.$.feedback.hidden = !this.$.feedback.hidden;
+            },
+
+            handleSelectCategory: function(e) {
+                if (e.target.tagName == 'PATHWAY-VIEWER') {
+                    var pv = e.target;
+                    this._applyModuleOpacity(pv);
+                }
+                if (e.target.tagName == 'PATHWAY-DRUG-VIEWER') {
+                    var pdv = e.target;
+                    var pv = pdv.$.pathwayViewer;
+                    this._applyModuleOpacity(pv);
+                }
+            },
+            _applyModuleOpacity: function(pv) {
+                var v_matches = {};
+                var e_matches = {};
+                var c, v, att, isModule;
+                for (var i = 0; i < pv.$.networkViewer.vertices.length; i++) {
+                    v = pv.$.networkViewer.vertices[i];
+                    att = v.attributes;
+                    isModule = false;
+                    for (var j = 0; j < pv.circuits.length; j++) {
+                        c = pv.circuits[j];
+                        if (att[c.id] == "1") {
+                            isModule = true;
+                            break;
+                        }
+                    }
+                    v_matches[v.attributes.label] = (isModule) ? 1 : 0.3;
+                }
+                for (var i = 0; i < pv.$.networkViewer.edges.length; i++) {
+                    e = pv.$.networkViewer.edges[i];
+                    att = e.attributes;
+                    isModule = false;
+                    for (var j = 0; j < pv.circuits.length; j++) {
+                        c = pv.circuits[j];
+                        if (att[c.id] == "1") {
+                            isModule = true;
+                            break;
+                        }
+                    }
+                    e_matches[e.attributes.label] = (isModule) ? 1 : 0.3;
+                }
+
+                pv.$.networkViewer.$.nodeRender.applyVisualSet({
+                    attribute: 'label',
+                    displayProperty: 'opacity',
+                    type: "discrete",
+                    matches: v_matches,
+                    points: [],
+                    parse: "string",
+                    enabled: true
+                });
+                pv.$.networkViewer.$.edgeRender.applyVisualSet({
+                    attribute: 'label',
+                    displayProperty: 'opacity',
+                    type: "discrete",
+                    matches: e_matches,
+                    points: [],
+                    parse: "string",
+                    enabled: true
+                });
+            },
+            handleSelectCircuit: function(e) {
+                if (e.target.tagName == 'PATHWAY-VIEWER') {
+                    var pv = e.target;
+                    if (pv.selectedCircuit == null) {
+                        this._applyModuleOpacity(pv);
+                    }
+                }
+                if (e.target.tagName == 'PATHWAY-DRUG-VIEWER') {
+                    var pdv = e.target;
+                    var pv = pdv.$.pathwayViewer;
+                    if (pv.selectedCircuit == null) {
+                        this._applyModuleOpacity(pv);
+                    }
+                }
+            },
+            hideContext: function() {
+                this.$.context.setAttribute('hidden', '');
+                this.$.context.innerHTML = '';
+            }
+        });
+    </script>
+</dom-module>

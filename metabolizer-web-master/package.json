@@ -1,0 +1,19 @@
+{
+    "name": "metabolizer-web",
+    "description": "",
+    "version": "1.0.1",
+    "license": "GPL-3.0",
+    "author": "Francisco Salavert Torres <frasator@gmail.com>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/frasator/metabolizer-web.git"
+    },
+    "scripts": {
+        "build": "node ./build.js"
+    },
+    "devDependencies": {
+        "async": "^2.1.5",
+        "shelljs": "^0.7.7",
+        "vulcanize": "1.14.8"
+    }
+}

@@ -1,0 +1,551 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<dom-module id="module-knockout-form">
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning"></style>
+    <style>
+         :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        #form {
+            margin: 0px auto 0px auto;
+            max-width: 1000px;
+            padding: 30px 25px 40px 25px;
+            border: 1px solid #c6d0da;
+            background-color: #FFFFFF;
+            box-shadow: 2px 6px 15px 8px rgba(0, 0, 0, 0.30);
+            background-color: #f5f5f5;
+        }
+
+        #title {
+            text-align: center;
+            color: var(--secondary-text-color);
+            font-weight: 300;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        #tissue {
+            overflow-y: scroll;
+            height: 200px;
+            border: 1px solid var(--divider-color);
+            background-color: var(--light-primary-color);
+            padding: 5px;
+        }
+
+        #pathwaysContent {
+            height: 300px;
+        }
+
+        stv-select-box {
+            width: 300px;
+            height: 150px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .key {
+            color: var(--secondary-text-color);
+        }
+
+        .button {
+            height: auto;
+            font-size: 18px;
+            border-radius: 5px;
+            background-color: var(--dark-button-color);
+            color: var(--text-primary-color);
+        }
+
+        .button:hover {
+            background-color: var(--light-button-color);
+        }
+
+        .stat-box {
+            box-sizing: border-box;
+            border: 1px solid var(--divider-color);
+            padding: 5px;
+            height: 150px;
+            width: 300px;
+            overflow-y: auto;
+        }
+    </style>
+    <template>
+        <form id="form" class="">
+
+            <div id="title">
+                Module Knockout
+            </div>
+
+            <!-- INPUT DATA -->
+            <stv-form-box>
+                <div class="header">
+                    Input data
+                </div>
+                <div class="container">
+                    <stv-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}" on-ok-click="checkExpFile">
+                    </stv-file-origin>
+                    <div hidden$="{{!checkSampleCount(expFileSampleCount)}}">
+                        Number of samples: <span style="font-size:1.1em;">{{expFileSampleCount}}</span>
+                    </div>
+                </div>
+            </stv-form-box>
+
+            <!-- DESIGN DATA -->
+            <stv-form-box disabled$="{{checkSampleCount2(expFileSampleCount)}}">
+                <div class="header">
+                    Design data
+                </div>
+                <div class="container vertical layout flex">
+                    <stv-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
+                    </stv-file-origin>
+                    <div class="horizontal layout">
+                        <div>
+                            <div style="padding:5px 0 0 5px;">
+                                <label class="stv">Expression matrix file samples:</label>
+                                <stv-select-box id="sampleSelect" options="{{inputSamples}}" title-attribute="text" enable-filter></stv-select-box>
+                            </div>
+                        </div>
+                        <div hidden$="{{isStatsHidden(inputSamples)}}" style="margin-left:20px;padding:5px 0 0 5px;">
+                            <label class="stv">Expression matrix file stats:</label>
+                            <br>
+                            <div class="stat-box">
+                                <label class="stv">Number of samples:</label> {{inputSamples.length}}
+                                <template is="dom-repeat" items="{{designConditions}}" as="cond">
+                                    <br>
+                                    <label class="stv">{{cond.name}}:</label> {{cond.count}} &nbsp; - &nbsp; {{cond.percent}}%
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden$="{{isStatsHidden(inputSamples)}}" style="margin:10px; 0 0 10px;">
+                        <div class="stv-note stv-note-warn" hidden$="{{!isStatsCountLow(inputSamples,designConditions)}}">
+                            Number of samples is not enough, please provide 10 or more samples per condition.
+                        </div>
+                        <div class="stv-note stv-note-warn" hidden$="{{isStatsPercentBalanced(inputSamples,designConditions)}}">
+                            Sample sizes between conditions are imbalanced. Between conditions maximum %25 sample size difference is allowed.
+                            <br> Imbalanced dataset can produce suboptimal models which are biased.
+                            <br> These criteria prevent unbiased learning.
+                        </div>
+                    </div>
+                </div>
+            </stv-form-box>
+
+            <!-- SPECIES -->
+            <stv-form-box>
+                <div class="header">
+                    Species
+                </div>
+                <div class="container horizontal layout center">
+                    <div>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="hsa" checked="true">
+                            <span>Human (Homo sapiens)</span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="mmu">
+                            <span>Mouse (Mus musculus)</span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="rno">
+                            <span>Rat (Rattus norvegicus)</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="dre">
+                            <span>Zebrafish (Danio rerio) </span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="dme">
+                            <span>Fruit fly (Drosophila melanogaster) </span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="cel">
+                            <span>Worm (Caenorhabditis elegans) </span>
+                        </label>
+                    </div>
+                </div>
+            </stv-form-box>
+
+            <!-- Auto KNOCKOUT -->
+            <stv-form-box disabled$="{{checkAutoKnockout(expFileSampleCount,inputSamples,designConditions)}}">
+                <div class="header">
+                    Auto Knockout
+                </div>
+                <div class="container">
+                    <label class="stv-control">
+                        <input id="autoCheckbox" type="checkbox" name="auto" on-change="handleAutoknockChange">
+                        <span>Enable auto knockout genes</span>
+                    </label>
+                    <div id="autoNote" class="stv-note stv-note-warn" hidden>
+                        Enabling this option will increase job execution, this is because all genes will be knockout one by one.
+                    </div>
+                </div>
+            </stv-form-box>
+
+
+            <stv-form-box>
+                <div class="header">
+                    Job information
+                </div>
+                <div class="container">
+                    <div>Output folder: &nbsp;
+                        <stv-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
+                        </stv-file-origin>
+                        <span id="output_folderError" class="errmsg"></span>
+                    </div>
+                    <br>
+                    <label class="stv">Job name:</label>
+                    <input type="text" id="jobName" class="stv" style="width:200px;" value="Module knockout" />
+                    <label class="stv">Description:</label>
+                    <textarea id="jobDescription" class="stv" style="width:200px;"></textarea>
+                </div>
+            </stv-form-box>
+            <div class="horizontal layout center-justified">
+                <div class="stv-btn stv-btn-shdw stv-btn-big button" on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
+            </div>
+        </form>
+    </template>
+
+    <script>
+        Polymer({
+            is: "module-knockout-form",
+            behaviors: [StvFormBehaviour],
+            properties: {
+                designConditions: {
+                    type: Array,
+                    value: function() {
+                        return []
+                    }
+                },
+                expFileSampleCount: {
+                    type: Number,
+                    value: -1
+                },
+                inputSamples: {
+                    type: Array,
+                    value: function() {
+                        return []
+                    }
+                },
+                matrixBioformat: {
+                    type: Array,
+                    value: [BIOFORMATS["DATAMATRIX_EXPRESSION"]]
+                },
+                designBioformat: {
+                    type: Array,
+                    value: [BIOFORMATS["EXPERIMENTAL_DESIGN"]]
+                }
+            },
+            checkDesignFile: function(e) {
+                var file = e.currentTarget.selectedFile;
+                this._getSamplesFromDesignFile(file._id);
+            },
+            checkExpFile: function(e) {
+                var file = e.currentTarget.selectedFile;
+                this._checkSamplesFromExpFile(file._id);
+            },
+            clean: function() {
+                this.clearAllErrors();
+                this.$.jobName.value = "Module knockout";
+                this.$.jobDescription.value = "";
+                this.$.exp_file.reset();
+                this.$.design_file.reset();
+                this.$.output_folder.reset();
+                this.set('inputSamples', []);
+                this.$.sampleSelect.selected = null;
+                this.$.form.elements['species'].value = 'hsa';
+                this.$.autoCheckbox.checked = false;
+                this.set('expFileSampleCount', -1);
+                this.set('designConditions', []);
+            },
+            _checkSamplesFromExpFile: function(fileId) {
+                var me = this;
+                SteviaManager.files.content({
+                    id: fileId,
+                    query: {
+                        start: 0,
+                        limit: 1
+                    },
+                    request: {
+                        success: function(content, req) {
+                            var line, fields, field, sample, condition;
+                            var lines = content.split('\n');
+                            if (lines.length > 0) {
+                                line = lines[0];
+                                if (line != '') {
+                                    fields = line.split('\t');
+                                    me.set('expFileSampleCount', fields.length - 1);
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+            _getSamplesFromDesignFile: function(fileId) {
+                var me = this;
+                SteviaManager.getFileContent(fileId, function(content) {
+                    var sampleArray = [];
+                    var line, fields, field, sample, condition;
+                    var lines = content.split('\n');
+                    var isNumber;
+                    if (lines.length > 0) {
+                        for (var i = 0; i < lines.length; i++) {
+                            line = lines[i];
+                            if (line != '') {
+                                fields = line.split('\t');
+                                sample = fields[0].trim();
+                                condition = fields[1].trim();
+                                sampleArray.push({
+                                    text: sample + ' - ' + condition,
+                                    sample: sample,
+                                    condition: condition
+                                });
+                            }
+                        }
+                    }
+                    me.set('inputSamples', sampleArray);
+                    var conditionMap = {};
+                    var conditionArray = [];
+                    var slength = sampleArray.length;
+                    for (var i = 0; i < slength; i++) {
+                        var s = sampleArray[i];
+                        if (conditionMap[s.condition] == null) {
+                            conditionMap[s.condition] = {
+                                name: s.condition,
+                                count: 0,
+                                percent: 0
+                            };
+                            conditionArray.push(conditionMap[s.condition]);
+                        }
+                        conditionMap[s.condition].count++;
+                        conditionMap[s.condition].percent = conditionMap[s.condition].count / slength * 100;
+                    }
+                    me.set('designConditions', conditionArray);
+                });
+            },
+            launchJob: function() {
+                var me = this;
+                this.clearAllErrors();
+                var query = {
+                    sid: Cookies("bioinfo_sid"),
+                    name: this.$.jobName.value,
+                    description: this.$.jobDescription.value
+                };
+                if (this.$.output_folder.selectedFile != null) {
+                    query.outdirId = this.$.output_folder.selectedFile._id;
+                }
+                var args = {
+                    tool: 'metabolizer',
+                    execution: 'module-knockout-init',
+                    executable: 'module-knockout-init.sh',
+                    options: {
+                        "output_folder": {
+                            out: true,
+                        }
+                    }
+                };
+
+                if (this.$.exp_file.selectedFile == null) {
+                    this.setError(this.$.exp_file, 'No expression matrix file selected');
+                } else {
+                    args.options['exp_file'] = {
+                        type: 'file',
+                        mode: 'id',
+                        value: this.$.exp_file.selectedFile._id
+                    };
+                }
+
+                if (this.expFileSampleCount == 1) {
+                    //nothing
+                } else {
+                    if (this.$.design_file.selectedFile == null) {
+                        this.setError(this.$.design_file, 'No design file selected');
+                    } else {
+                        args.options['design_file'] = {
+                            type: 'file',
+                            mode: 'id',
+                            value: this.$.design_file.selectedFile._id
+                        };
+                    }
+                }
+
+                args.options['species'] = {
+                    type: 'text',
+                    value: this.$.form.elements['species'].value
+                };
+
+                if (this.$.autoCheckbox.checked == true) {
+                    args.options['auto'] = {
+                        type: 'text',
+                        value: 'T'
+                    }
+                }
+
+                if (this.expFileSampleCount == 1) {
+                    //nothing
+                } else {
+                    if (this.$.sampleSelect.selected == null) {
+                        this.setError(this.$.sampleSelect, 'No sample selected.');
+                    } else {
+                        args.options['sample'] = {
+                            type: 'text',
+                            value: this.$.sampleSelect.selected.sample
+                        };
+                    }
+                }
+
+                if (
+                    this.expFileSampleCount <= 1 ||
+                    !this.isStatsPercentBalanced(this.inputSamples, this.designConditions) ||
+                    this.isStatsCountLow(this.inputSamples, this.designConditions)
+                ) {
+                    args.options['simple'] = {
+                        type: 'text',
+                        value: 'T'
+                    };
+                    delete args.options.auto;
+                }
+
+                if (this.hasErrors == false && this.$.form.checkValidity()) {
+                    // console.log('Launching');
+                    // console.log(args.options);
+                    // return;
+                    me._createJob(query, args);
+                }
+            },
+            _createJob: function(query, args) {
+                var me = this;
+                SteviaManager.jobs.create({
+                    query: query,
+                    request: {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(args),
+                        success: function(response) {
+                            if (response.response[0].error == null) {
+                                console.log(response);
+                                // var job = response.response[0].result[0];
+                                // console.log(job);
+                                me.clean();
+                                me.fire('job-launched');
+                                me.fire('need-refresh');
+                                //                                    me.message = job.commandLine;
+                            } else {
+                                console.log('PathAct form: Server error, try again later.');
+                            }
+                        },
+                        error: function() {
+                            console.log('PathAct form: Server error, try again later.');
+                        }
+                    }
+                });
+            },
+            isStatsHidden: function(inputSamples) {
+                if (inputSamples && inputSamples.length > 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            isStatsCountLow: function(inputSamples, designConditions) {
+                if (inputSamples.length == 0) {
+                    return false;
+                }
+                if (inputSamples && inputSamples.length > 10) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            isStatsPercentBalanced: function(inputSamples, designConditions) {
+                var max;
+                var min;
+                for (var i = 0; i < designConditions.length; i++) {
+                    var dc = designConditions[i];
+                    if (max == null) {
+                        max = dc.percent
+                    }
+                    if (min == null) {
+                        min = dc.percent
+                    }
+                    if (dc.percent < min) {
+                        min = dc.percent;
+                    }
+                    if (dc.percent > max) {
+                        max = dc.percent;
+                    }
+                }
+                var diff = max - min;
+                if (isNaN(diff)) {
+                    return true;
+                }
+                if (diff > 25) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            checkSampleCount: function(count) {
+                return count > -1;
+            },
+            checkSampleCount2: function(count) {
+                return count == 1;
+            },
+            checkAutoKnockout: function(count, inputSamples, designConditions) {
+                if (
+                    count == 1 ||
+                    !this.isStatsPercentBalanced(inputSamples, designConditions) ||
+                    this.isStatsCountLow(this.inputSamples, this.designConditions)
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            // handleLoadExample: function() {
+            //     var me = this;
+            //     var query = {
+            //         name: 'Example',
+            //         description: ''
+            //     };
+            //     var args = {
+            //         tool: 'hipathia',
+            //         execution: 'pathact-init',
+            //         executable: 'pathact-init.sh',
+            //         options: {
+            //             "working_folder": {
+            //                 out: true,
+            //             },
+            //             "verbose": {
+            //                 type: 'flag'
+            //             },
+            //             "exp_file": {
+            //                 "type": "file",
+            //                 "mode": "example",
+            //                 "value": "brca_genes_vals_bn.txt"
+            //             },
+            //             "sample": {
+            //                 "type": "text",
+            //                 "value": "TCGA.EW.A1OV.01A.11R.A144.07"
+            //             },
+            //             "log": {
+            //                 "type": "flag"
+            //             }
+            //         }
+            //     };
+            //     this._createJob(query, args);
+            // },
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,442 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/stevia-elements/src/stv-form-box.html">
+<dom-module id="module-activity-form">
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
+         :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        #form {
+            margin: 0px auto 0px auto;
+            max-width: 1000px;
+            padding: 30px 25px 40px 25px;
+            border: 1px solid #c6d0da;
+            background-color: #FFFFFF;
+            box-shadow: 2px 6px 15px 8px rgba(0, 0, 0, 0.30);
+            background-color: #f5f5f5;
+        }
+
+        #title {
+            text-align: center;
+            color: var(--secondary-text-color);
+            font-weight: 300;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        #tissue {
+            overflow-y: scroll;
+            height: 200px;
+            border: 1px solid var(--divider-color);
+            background-color: var(--light-primary-color);
+            padding: 5px;
+        }
+
+        #pathwaysContent {
+            height: 300px;
+        }
+
+        stv-select-box {
+            width: 300px;
+            height: 80px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .key {
+            color: var(--secondary-text-color);
+        }
+
+        .button {
+            height: auto;
+            font-size: 18px;
+            border-radius: 5px;
+            background-color: var(--dark-button-color);
+            color: var(--text-primary-color);
+        }
+
+        .button:hover {
+            background-color: var(--light-button-color);
+        }
+    </style>
+    <template>
+        <form id="form">
+            <div id="title">
+                Module Activity
+            </div>
+
+            <!-- INPUT DATA -->
+            <stv-form-box>
+                <div class="header">
+                    Input data
+                </div>
+                <div class="container">
+                    <stv-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}" on-ok-click="checkExpFile">
+                    </stv-file-origin>
+                </div>
+            </stv-form-box>
+
+            <!-- DESIGN DATA -->
+            <stv-form-box>
+                <div class="header">
+                    Design data
+                </div>
+                <div class="container">
+                    <div class="vertical layout">
+                        <label class="stv-control">
+                            <input type="radio" name="design_type" checked="true" value="categorical" on-click="handleDesignType">
+                            <span>Two group comparison</span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="design_type" value="continuous" on-click="handleDesignType">
+                            <span>Correlation with continous variable</span>
+                        </label>
+                        <br>
+                        <stv-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
+                        </stv-file-origin>
+                    </div>
+                    <br>
+                    <div hidden$="{{!_checkValue('continuous', design_type)}}">Experimental design file: &nbsp;
+                        <div class="horizontal layout center" style="padding:5px 0 0 5px;">
+                            <div>
+                                <label class="stv">Condition 1:</label>
+                                <stv-select-box id="condition1Select" options="{{designConditions}}" title-attribute="name">
+                                </stv-select-box>
+                            </div>
+                            <div style="margin-left:10px;">
+                                <label class="stv">Condition 2:</label>
+                                <stv-select-box id="condition2Select" options="{{designConditions}}" title-attribute="name">
+                                </stv-select-box>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden$="{{!_checkValue('categorical', design_type)}}">
+                        <div>
+                            <label class="stv">Select variable:</label>
+                            <stv-select-box id="variableSelect" options="{{continuousConditions}}" title-attribute="name">
+                            </stv-select-box>
+                        </div>
+                        <br>
+                        <div> &nbsp; Correlation method: &nbsp;</div>
+                        <div style="margin-left:15px;">
+                            <label class="stv-control">
+                                <input type="radio" name="methodcor" checked="true" value="spearman">
+                                <span>Spearman</span>
+                            </label>
+                            <label class="stv-control">
+                                <input type="radio" name="methodcor" value="pearson">
+                                <span>Pearson</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </stv-form-box>
+
+
+            <!-- SPECIES -->
+            <stv-form-box>
+                <div class="header">
+                    Species
+                </div>
+                <div class="container horizontal layout center">
+                    <div>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="hsa" checked="true">
+                            <span>Human (Homo sapiens)</span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="mmu">
+                            <span>Mouse (Mus musculus)</span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="rno">
+                            <span>Rat (Rattus norvegicus)</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="dre">
+                            <span>Zebrafish (Danio rerio) </span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="dme">
+                            <span>Fruit fly (Drosophila melanogaster) </span>
+                        </label>
+                        <label class="stv-control">
+                            <input type="radio" name="species" value="cel">
+                            <span>Worm (Caenorhabditis elegans) </span>
+                        </label>
+                    </div>
+                </div>
+            </stv-form-box>
+
+            <!-- JOB INFORMATION -->
+            <stv-form-box>
+                <div class="header">
+                    Job information
+                </div>
+                <div class="container">
+                    <div>Output folder: &nbsp;
+                        <stv-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
+                        </stv-file-origin>
+                    </div>
+                    <br>
+                    <label class="stv">Job name:</label>
+                    <input type="text" id="jobName" class="stv" style="width:200px;" value="Module activity" />
+                    <label class="stv">Description:</label>
+                    <textarea id="jobDescription" class="stv" style="width:200px;"></textarea>
+                </div>
+            </stv-form-box>
+
+            <div class="horizontal layout center-justified">
+                <div class="button stv-btn stv-btn-shdw stv-btn-big " on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
+            </div>
+        </form>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'module-activity-form',
+            behaviors: [StvFormBehaviour],
+            properties: {
+                design_type: {
+                    type: String,
+                    value: 'categorical'
+                },
+                methodcor: {
+                    type: String,
+                    value: 'spearman'
+                },
+                designConditions: {
+                    type: Array
+                },
+                continuousConditions: {
+                    type: Array
+                },
+                matrixBioformat: {
+                    type: Array,
+                    value: [BIOFORMATS["DATAMATRIX_EXPRESSION"]]
+                },
+                designBioformat: {
+                    type: Array,
+                    value: [BIOFORMATS["EXPERIMENTAL_DESIGN"]]
+                }
+            },
+            clean: function() {
+                this.clearAllErrors();
+                this.$.jobName.value = "Module activity";
+                this.$.jobDescription.value = "";
+                this.$.exp_file.reset();
+                this.$.design_file.reset();
+                this.$.output_folder.reset();
+                this.design_type = 'categorical';
+                this.$.form.elements['design_type'].value = 'categorical';
+                this.$.form.elements['methodcor'].value = 'categorical';
+
+                this.set('designConditions', []);
+                this.set('continuousConditions', []);
+                this.$.condition1Select.selectedOptionText = '';
+                this.$.condition2Select.selectedOptionText = '';
+
+                this.$.form.elements['species'].value = 'hsa';
+            },
+            checkDesignFile: function(e) {
+                var file = e.currentTarget.selectedFile;
+                this._getConditionsFromDesignFile(file._id);
+            },
+            checkExpFile: function(e) {
+
+            },
+            handleDesignType: function(e) {
+                this.set('design_type', e.currentTarget.value);
+            },
+            _checkValue: function(val, currentVal) {
+                return val !== currentVal;
+            },
+            _getConditionsFromDesignFile: function(fileId) {
+                var me = this;
+                SteviaManager.getFileContent(fileId, function(content) {
+                    var conditionMap = {};
+                    var conditionArray = [];
+                    var line, fields, field;
+                    var lines = content.split('\n');
+                    var isNumber;
+                    var continuousNamesArray = [];
+                    if (lines.length > 0) {
+                        for (var i = 0; i < lines.length; i++) {
+                            line = lines[i];
+                            if (line != '') {
+                                fields = line.split('\t');
+                                if(i==0){
+                                    for (var j = 0; j < fields.length; j++) {
+                                        var f = fields[j];
+                                        if(f != ""){
+                                            continuousNamesArray.push({
+                                                name: f
+                                            });
+                                        }
+                                    }
+                                }
+                                if (conditionMap[fields[1]] !== true) {
+                                    conditionMap[fields[1]] = true;
+                                    conditionArray.push({
+                                        name: fields[1]
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    me.$.condition1Select.set('selected', null);
+                    me.$.condition2Select.set('selected', null);
+                    me.set('designConditions', conditionArray);
+                    me.set('continuousConditions', continuousNamesArray);
+                    me.$.condition1Select.set('selected', conditionArray[0]);
+                    me.$.condition2Select.set('selected', conditionArray[1]);
+                });
+            },
+            launchJob: function(e) {
+                var me = this;
+                this.clearAllErrors();
+
+                var query = {
+                    sid: Cookies("bioinfo_sid"),
+                    name: this.$.jobName.value,
+                    description: this.$.jobDescription.value
+                };
+                if (this.$.output_folder.selectedFile != null) {
+                    query.outdirId = this.$.output_folder.selectedFile._id;
+                }
+
+                var args = {
+                    tool: 'metabolizer',
+                    execution: 'module-activity',
+                    executable: 'module-activity.sh',
+                    options: {
+                        "output_folder": {
+                            out: true,
+                        }
+                    }
+                };
+
+                args.options['species'] = {
+                    type: 'text',
+                    value: this.$.form.elements['species'].value
+                };
+                args.options['design_type'] = {
+                    type: 'text',
+                    value: this.$.form.elements['design_type'].value
+                };
+
+                args.options['methodcor'] = {
+                    type: 'text',
+                    value: this.$.form.elements['methodcor'].value
+                };
+
+                if (this.$.exp_file.selectedFile == null) {
+                    this.setError(this.$.exp_file, 'No expression matrix file selected');
+                } else {
+                    args.options['exp_file'] = {
+                        type: 'file',
+                        mode: 'id',
+                        value: this.$.exp_file.selectedFile._id
+                    };
+                }
+
+                if (this.$.design_file.selectedFile == null) {
+                    this.setError(this.$.design_file, 'No experimental design file selected');
+                } else {
+                    args.options['design_file'] = {
+                        type: 'file',
+                        mode: 'id',
+                        value: this.$.design_file.selectedFile._id
+                    };
+                }
+
+                if(this.design_type == 'categorical'){
+                    if (this.$.condition1Select.selected == null) {
+                        this.setError(this.$.condition1Select, 'Condition 1 is not selected.');
+                    } else if (this.$.condition1Select.selected.name.indexOf(' ') != -1) {
+                        this.setError(this.$.condition1Select, 'Spaces are not allowed in conditions.');
+                    } else {
+                        args.options['cond1'] = {
+                            type: 'text',
+                            value: this.$.condition1Select.selected.name
+                        };
+                    }
+
+                    if (this.$.condition2Select.selected == null) {
+                        this.setError(this.$.condition2Select, 'Condition 2 is not selected.');
+                    } else if (this.$.condition2Select.selected.name.indexOf(' ') != -1) {
+                        this.setError(this.$.condition2Select, 'Spaces are not allowed in conditions.');
+                    } else {
+                        args.options['cond2'] = {
+                            type: 'text',
+                            value: this.$.condition2Select.selected.name
+                        };
+                    }
+
+                    if (args.options['cond2'] != null && args.options['cond1'] != null) {
+                        if (args.options['cond2'].value != null &&
+                        args.options['cond1'].value != null &&
+                        args.options['cond2'].value == args.options['cond1'].value) {
+
+                            this.setError(this.$.condition1Select, 'Condition 2 is the same as condition 1.');
+                        } else if (args.options['cond2'].value != null && args.options['cond1'].value != null) {
+                            //
+                        }
+                    }
+                }else{
+                    if (this.$.variableSelect.selected == null) {
+                        this.setError(this.$.variableSelect, 'Variable is not selected.');
+                    } else {
+                        args.options['corvar'] = {
+                            type: 'text',
+                            value: this.$.variableSelect.selected.name
+                        };
+                    }
+                }
+
+
+
+                console.log(query);
+                console.log(args);
+                if (this.hasErrors == false && this.$.form.checkValidity()) {
+                    console.log('Launching');
+                    // return;
+                    SteviaManager.jobs.create({
+                        query: query,
+                        request: {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(args),
+                            success: function(response) {
+                                if (response.response[0].error == null) {
+                                    console.log(response);
+                                    me.clean();
+                                    me.fire('job-launched');
+                                    me.fire('need-refresh');
+                                } else {
+                                    console.log(response.response[0].error);
+                                }
+                            },
+                            error: function() {
+                                console.log('Server error, try again later.');
+                            }
+                        }
+                    });
+                }
+            },
+        })
+    </script>
+</dom-module>
