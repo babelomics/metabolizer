@@ -8,6 +8,7 @@
         "tests"
     ],
     "dependencies": {
+        "fontawesome": "4.7.0",
         "stevia-elements": "https://github.com/frasator/stevia-elements.git#master",
         "network-viewer": "https://github.com/frasator/network-viewer.git#master",
         "pathway-viewer": "http://github.com/frasator/pathway-viewer.git#master"
