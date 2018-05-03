@@ -8,8 +8,9 @@
         "tests"
     ],
     "dependencies": {
+        "polymer": "Polymer/polymer#1.8.1",
         "fontawesome": "4.7.0",
-        "stevia-elements": "git://github.com/babelomics/stevia-elements.git#develop",
+        "stevia-elements": "git://github.com/babelomics/stevia-elements.git#steviaHipathia",
         "network-viewer": "https://github.com/babelomics/network-viewer.git#master",
         "pathway-viewer": "https://github.com/babelomics/pathway-viewer.git#master"
     },
