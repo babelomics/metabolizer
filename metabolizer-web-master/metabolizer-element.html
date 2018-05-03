@@ -340,8 +340,16 @@
                         } else {
                             pdv._hideKoControl();
                         }
+                        pdv.addEventListener("mouseleave", function(e) {
+                            // highlight the mouseleave target
+                            pdv._hideKoControl();
+                        }, false);
                     }
                 });
+                this.$.report.addEventListener("scroll", function(e) {
+                    // highlight the mouseleave target
+                    me.hideContext();
+                }, false);
                 this.$.report.addEventListener('rightclickvertex', function(e) {
                     var v = e.detail.vertex;
                     me.$.context.style.left = e.detail.x + 'px';
