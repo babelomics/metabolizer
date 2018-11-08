@@ -43,7 +43,7 @@
             height: 300px;
         }
 
-        stv-select-box {
+        elm-select-box {
             width: 300px;
             height: 150px;
         }
@@ -85,132 +85,132 @@
             </div>
 
             <!-- INPUT DATA -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Input data
                 </div>
                 <div class="container">
-                    <stv-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}" on-ok-click="checkExpFile">
-                    </stv-file-origin>
+                    <elm-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}" on-ok-click="checkExpFile">
+                    </elm-file-origin>
                     <div hidden$="{{!checkSampleCount(expFileSampleCount)}}">
                         Number of samples: <span style="font-size:1.1em;">{{expFileSampleCount}}</span>
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <!-- DESIGN DATA -->
-            <stv-form-box disabled$="{{checkSampleCount2(expFileSampleCount)}}">
+            <elm-form-box disabled$="{{checkSampleCount2(expFileSampleCount)}}">
                 <div class="header">
                     Design data
                 </div>
                 <div class="container vertical layout flex">
-                    <stv-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
-                    </stv-file-origin>
+                    <elm-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
+                    </elm-file-origin>
                     <div class="horizontal layout">
                         <div>
                             <div style="padding:5px 0 0 5px;">
-                                <label class="stv">Expression matrix file samples:</label>
-                                <stv-select-box id="sampleSelect" options="{{inputSamples}}" title-attribute="text" enable-filter></stv-select-box>
+                                <label class="elm">Expression matrix file samples:</label>
+                                <elm-select-box id="sampleSelect" options="{{inputSamples}}" title-attribute="text" enable-filter></elm-select-box>
                             </div>
                         </div>
                         <div hidden$="{{isStatsHidden(inputSamples)}}" style="margin-left:20px;padding:5px 0 0 5px;">
-                            <label class="stv">Expression matrix file stats:</label>
+                            <label class="elm">Expression matrix file stats:</label>
                             <br>
                             <div class="stat-box">
-                                <label class="stv">Number of samples:</label> {{inputSamples.length}}
+                                <label class="elm">Number of samples:</label> {{inputSamples.length}}
                                 <template is="dom-repeat" items="{{designConditions}}" as="cond">
                                     <br>
-                                    <label class="stv">{{cond.name}}:</label> {{cond.count}} &nbsp; - &nbsp; {{cond.percent}}%
+                                    <label class="elm">{{cond.name}}:</label> {{cond.count}} &nbsp; - &nbsp; {{cond.percent}}%
                                 </template>
                             </div>
                         </div>
                     </div>
                     <div hidden$="{{isStatsHidden(inputSamples)}}" style="margin:10px; 0 0 10px;">
-                        <div class="stv-note stv-note-warn" hidden$="{{!isStatsCountLow(inputSamples,designConditions)}}">
+                        <div class="elm-note elm-note-warn" hidden$="{{!isStatsCountLow(inputSamples,designConditions)}}">
                             Number of samples is not enough, please provide 10 or more samples per condition.
                         </div>
-                        <div class="stv-note stv-note-warn" hidden$="{{isStatsPercentBalanced(inputSamples,designConditions)}}">
+                        <div class="elm-note elm-note-warn" hidden$="{{isStatsPercentBalanced(inputSamples,designConditions)}}">
                             Sample sizes between conditions are imbalanced. Between conditions maximum %25 sample size difference is allowed.
                             <br> Imbalanced dataset can produce suboptimal models which are biased.
                             <br> These criteria prevent unbiased learning.
                         </div>
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <!-- SPECIES -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Species
                 </div>
                 <div class="container horizontal layout center">
                     <div>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="hsa" checked="true">
                             <span>Human (Homo sapiens)</span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="mmu">
                             <span>Mouse (Mus musculus)</span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="rno">
                             <span>Rat (Rattus norvegicus)</span>
                         </label>
                     </div>
                     <div>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="dre">
                             <span>Zebrafish (Danio rerio) </span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="dme">
                             <span>Fruit fly (Drosophila melanogaster) </span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="cel">
                             <span>Worm (Caenorhabditis elegans) </span>
                         </label>
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <!-- Auto KNOCKOUT -->
-            <stv-form-box disabled$="{{checkAutoKnockout(expFileSampleCount,inputSamples,designConditions)}}">
+            <elm-form-box disabled$="{{checkAutoKnockout(expFileSampleCount,inputSamples,designConditions)}}">
                 <div class="header">
                     Auto Knockout
                 </div>
                 <div class="container">
-                    <label class="stv-control">
+                    <label class="elm-control">
                         <input id="autoCheckbox" type="checkbox" name="auto" on-change="handleAutoknockChange">
                         <span>Enable auto knockout genes</span>
                     </label>
-                    <div id="autoNote" class="stv-note stv-note-warn" hidden>
+                    <div id="autoNote" class="elm-note elm-note-warn" hidden>
                         Enabling this option will increase job execution, this is because all genes will be knockout one by one.
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
 
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Job information
                 </div>
                 <div class="container">
                     <div>Output folder: &nbsp;
-                        <stv-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
-                        </stv-file-origin>
+                        <elm-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
+                        </elm-file-origin>
                         <span id="output_folderError" class="errmsg"></span>
                     </div>
                     <br>
-                    <label class="stv">Job name:</label>
-                    <input type="text" id="jobName" class="stv" style="width:200px;" value="Module knockout" />
-                    <label class="stv">Description:</label>
-                    <textarea id="jobDescription" class="stv" style="width:200px;"></textarea>
+                    <label class="elm">Job name:</label>
+                    <input type="text" id="jobName" class="elm" style="width:200px;" value="Module knockout" />
+                    <label class="elm">Description:</label>
+                    <textarea id="jobDescription" class="elm" style="width:200px;"></textarea>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
             <div class="horizontal layout center-justified">
-                <div class="stv-btn stv-btn-shdw stv-btn-big button" on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
+                <div class="elm-btn elm-btn-shdw elm-btn-big button" on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
             </div>
         </form>
     </template>
@@ -218,7 +218,7 @@
     <script>
         Polymer({
             is: "module-knockout-form",
-            behaviors: [StvFormBehaviour],
+            behaviors: [elmFormBehaviour],
             properties: {
                 designConditions: {
                     type: Array,
@@ -269,7 +269,7 @@
             },
             _checkSamplesFromExpFile: function(fileId) {
                 var me = this;
-                SteviaManager.files.content({
+                CbaManager.files.content({
                     id: fileId,
                     query: {
                         start: 0,
@@ -292,7 +292,7 @@
             },
             _getSamplesFromDesignFile: function(fileId) {
                 var me = this;
-                SteviaManager.getFileContent(fileId, function(content) {
+                CbaManager.getFileContent(fileId, function(content) {
                     var sampleArray = [];
                     var line, fields, field, sample, condition;
                     var lines = content.split('\n');
@@ -424,7 +424,7 @@
             },
             _createJob: function(query, args) {
                 var me = this;
-                SteviaManager.jobs.create({
+                CbaManager.jobs.create({
                     query: query,
                     request: {
                         method: 'POST',

@@ -43,7 +43,7 @@
             height: 300px;
         }
 
-        stv-select-box {
+        elm-select-box {
             width: 300px;
             height: 150px;
         }
@@ -103,27 +103,27 @@
             </div>
 
             <!-- TYPE -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Type
                 </div>
                 <div class="container">
-                    <label class="stv-control">
+                    <label class="elm-control">
                         <input type="radio" name="type" value="train" checked="true" on-click="handleType">
                         <span>Train new model</span>
                     </label>
-                    <label class="stv-control">
+                    <label class="elm-control">
                         <input type="radio" name="type" value="test" on-click="handleType">
                         <span>Test existing model</span>
                     </label>
 
                     <div hidden$="{{!isEqual('test',type)}}" class="horizontal layout wrap" style="margin-top:10px;">
                         <div>
-                            <label class="stv">Existing models:</label>
-                            <stv-job-browser id="jobBrowser" on-jobselect="handleModelJobSelect" allowed-tools="{{predictionAllowedTool}}" user-data="{{userData}}" hide-status-filter hide-tool-filter disable-relaunch hide-notification-control view="done"></stv-job-browser>
+                            <label class="elm">Existing models:</label>
+                            <elm-job-browser id="jobBrowser" on-jobselect="handleModelJobSelect" allowed-tools="{{predictionAllowedTool}}" user-data="{{userData}}" hide-status-filter hide-tool-filter disable-relaunch hide-notification-control view="done"></elm-job-browser>
                         </div>
                         <div id="modelBox">
-                            <label class="stv">Selected model information:</label>
+                            <label class="elm">Selected model information:</label>
                             <div id="modelInfo">
                                 <span class="key">Design file: </span>{{modelDesignFile.name}}
                                 <br>
@@ -136,137 +136,137 @@
                         </div>
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <!-- INPUT DATA -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Input data
                 </div>
                 <div class="container">
-                    <stv-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}">
-                    </stv-file-origin>
+                    <elm-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}">
+                    </elm-file-origin>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
 
             <!-- DESIGN DATA -->
-            <stv-form-box hidden$="{{!isEqual('train',type)}}">
+            <elm-form-box hidden$="{{!isEqual('train',type)}}">
                 <div class="header">
                     Design data
                 </div>
                 <div class="container">
-                    <stv-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
-                    </stv-file-origin>
+                    <elm-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
+                    </elm-file-origin>
 
-                    <label class="stv">Expression matrix file stats:</label>
+                    <label class="elm">Expression matrix file stats:</label>
                     <br>
                     <div class="stat-box">
                         <div hidden$="{{isEqual(inputSamples.length,0)}}">
-                            <label class="stv">Number of samples:</label> {{inputSamples.length}}
+                            <label class="elm">Number of samples:</label> {{inputSamples.length}}
                         </div>
                         <template is="dom-repeat" items="{{designConditions}}" as="cond">
-                            <label class="stv">{{cond.name}}:</label> {{cond.count}} &nbsp; - &nbsp; {{cond.percent}}%
+                            <label class="elm">{{cond.name}}:</label> {{cond.count}} &nbsp; - &nbsp; {{cond.percent}}%
                             <br>
                         </template>
                     </div>
 
                     <!-- <div style="padding:5px 0 0 5px;">
-                        <label class="stv">Detected classes:</label>
-                        <stv-select-box options="{{designConditions}}" title-attribute="name" disable-selection>
-                        </stv-select-box>
+                        <label class="elm">Detected classes:</label>
+                        <elm-select-box options="{{designConditions}}" title-attribute="name" disable-selection>
+                        </elm-select-box>
                     </div> -->
                     <div hidden$="{{isStatsHidden(inputSamples)}}" style="margin:10px; 0 0 10px;">
-                        <div class="stv-note stv-note-warn" hidden$="{{!isStatsCountLow(inputSamples,designConditions)}}">
+                        <div class="elm-note elm-note-warn" hidden$="{{!isStatsCountLow(inputSamples,designConditions)}}">
                             Number of samples is not enough, please provide 10 or more samples per condition.
                         </div>
-                        <div class="stv-note stv-note-warn" hidden$="{{isStatsPercentBalanced(inputSamples,designConditions)}}">
+                        <div class="elm-note elm-note-warn" hidden$="{{isStatsPercentBalanced(inputSamples,designConditions)}}">
                             Sample sizes between conditions are imbalanced,
                             <br> Imbalanced dataset can produce suboptimal models which are biased.
                         </div>
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
 
             <!-- TRAIN METHOD -->
-            <stv-form-box hidden$="{{!isEqual('train',type)}}">
+            <elm-form-box hidden$="{{!isEqual('train',type)}}">
                 <div class="header">
                     Train Method
                 </div>
                 <div class="container">
-                    <label class="stv-control">
+                    <label class="elm-control">
                         <input type="radio" name="train_method" value="RF" checked="true">
                         <span>Random Forest</span>
                     </label>
-                    <label class="stv-control">
+                    <label class="elm-control">
                         <input type="radio" name="train_method" value="SVM">
                         <span>Support Vector Machines</span>
                     </label>
-                    <!-- <label class="stv-control">
+                    <!-- <label class="elm-control">
                         <input type="radio" name="train_method" value="LDA">
                         <span>Linear Discriminant Analysis</span>
                     </label> -->
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <!-- SPECIES -->
-            <stv-form-box hidden$="{{!isEqual('train',type)}}">
+            <elm-form-box hidden$="{{!isEqual('train',type)}}">
                 <div class="header">
                     Species
                 </div>
                 <div class="container horizontal layout center">
                     <div>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="hsa" checked="true">
                             <span>Human (Homo sapiens)</span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="mmu">
                             <span>Mouse (Mus musculus)</span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="rno">
                             <span>Rat (Rattus norvegicus)</span>
                         </label>
                     </div>
                     <div>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="dre">
                             <span>Zebrafish (Danio rerio) </span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="dme">
                             <span>Fruit fly (Drosophila melanogaster) </span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="cel">
                             <span>Worm (Caenorhabditis elegans) </span>
                         </label>
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <!-- JOB INFORMATION -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Job information
                 </div>
                 <div class="container">
                     <div>Output folder: &nbsp;
-                        <stv-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
-                        </stv-file-origin>
+                        <elm-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
+                        </elm-file-origin>
                     </div>
                     <br>
-                    <label class="stv">Job name:</label>
-                    <input type="text" id="jobName" class="stv" style="width:200px;" value="" />
-                    <label class="stv">Description:</label>
-                    <textarea id="jobDescription" class="stv" style="width:200px;"></textarea>
+                    <label class="elm">Job name:</label>
+                    <input type="text" id="jobName" class="elm" style="width:200px;" value="" />
+                    <label class="elm">Description:</label>
+                    <textarea id="jobDescription" class="elm" style="width:200px;"></textarea>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <div class="horizontal layout center-justified">
-                <div class="stv-btn stv-btn-shdw stv-btn-big button" on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
+                <div class="elm-btn elm-btn-shdw elm-btn-big button" on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
             </div>
         </form>
     </template>
@@ -274,7 +274,7 @@
     <script>
         Polymer({
             is: "module-prediction-form",
-            behaviors: [StvFormBehaviour],
+            behaviors: [elmFormBehaviour],
             properties: {
                 type: {
                     type: String,
@@ -343,13 +343,13 @@
                 this.set('modelJob', e.detail);
                 async.waterfall([
                     function(callback) {
-                        SteviaManager.getPlainFolderFiles(me.modelJob.options.design_file.value, function(files) {
+                        CbaManager.getPlainFolderFiles(me.modelJob.options.design_file.value, function(files) {
                             me.set('modelDesignFile', files[0]);
                             callback(null);
                         });
                     },
                     function(callback) {
-                        SteviaManager.getPlainFolderFiles(me.modelJob.folder._id, function(files) {
+                        CbaManager.getPlainFolderFiles(me.modelJob.folder._id, function(files) {
                             me.set('fileNameMap', {});
                             for (var i = 0; i < files.length; i++) {
                                 var f = files[i];
@@ -360,7 +360,7 @@
                         });
                     },
                     function(callback) {
-                        SteviaManager.getFileContent(me.fileNameMap['model_stats.txt']._id, function(textContent) {
+                        CbaManager.getFileContent(me.fileNameMap['model_stats.txt']._id, function(textContent) {
                             var modelStats = [];
                             var lines = textContent.split('\n');
                             var line, fields, field;
@@ -391,7 +391,7 @@
             },
             _getConditionsFromDesignFile: function(fileId) {
                 var me = this;
-                SteviaManager.getFileContent(fileId, function(content) {
+                CbaManager.getFileContent(fileId, function(content) {
                     var conditionMap = {};
                     var conditionArray = [];
                     var line, fields, field;
@@ -416,7 +416,7 @@
             },
             _getSamplesFromDesignFile: function(fileId) {
                 var me = this;
-                SteviaManager.getFileContent(fileId, function(content) {
+                CbaManager.getFileContent(fileId, function(content) {
                     var sampleArray = [];
                     var line, fields, field, sample, condition;
                     var lines = content.split('\n');
@@ -539,7 +539,7 @@
             },
             _createJob: function(query, args) {
                 var me = this;
-                SteviaManager.jobs.create({
+                CbaManager.jobs.create({
                     query: query,
                     request: {
                         method: 'POST',

@@ -1,4 +1,4 @@
-<script src="bower_components/stevia-elements/src/manager/stevia-manager.js"></script>
+<script src="bower_components/cba-elements/src/manager/cba-manager.js"></script>
 
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
@@ -8,23 +8,23 @@
 <script src="bower_components/crypto-js/sha1.js"></script>
 <script src="bower_components/async/dist/async.js"></script>
 
-<link rel="import" href="bower_components/stevia-elements/src/stv-header.html">
-<link rel="import" href="bower_components/stevia-elements/src/stv-application-behavior.html">
-<link rel="import" href="bower_components/stevia-elements/src/stv-footer.html">
-<link rel="import" href="bower_components/stevia-elements/src/stv-select.html">
-<link rel="import" href="bower_components/stevia-elements/src/stv-select-box.html">
-<link rel="import" href="bower_components/stevia-elements/src/stv-panel.html">
-<link rel="import" href="bower_components/stevia-elements/src/dropdown/stv-dropdown.html">
-<link rel="import" href="bower_components/stevia-elements/src/stv-feedback.html">
-<link rel="import" href="bower_components/stevia-elements/src/stv-launcher/stv-launcher.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-header.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-application-behavior.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-footer.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-select.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-select-box.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-panel.html">
+<link rel="import" href="bower_components/cba-elements/src/dropdown/elm-dropdown.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-feedback.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-launcher/elm-launcher.html">
 
-<link rel="import" href="bower_components/stevia-elements/src/table/stv-table.html">
-<link rel="import" href="bower_components/stevia-elements/src/form/stv-file-origin.html">
-<link rel="import" href="bower_components/stevia-elements/src/form/stv-form-behaviour.html">
-<link rel="import" href="bower_components/stevia-elements/src/file/stv-file-browser.html">
-<link rel="import" href="bower_components/stevia-elements/src/job/stv-job-browser.html">
-<link rel="import" href="bower_components/stevia-elements/src/stv-cluster-status.html">
-<link rel="import" href="bower_components/stevia-elements/src/report/stv-report.html">
+<link rel="import" href="bower_components/cba-elements/src/table/elm-table.html">
+<link rel="import" href="bower_components/cba-elements/src/form/elm-file-origin.html">
+<link rel="import" href="bower_components/cba-elements/src/form/elm-form-behaviour.html">
+<link rel="import" href="bower_components/cba-elements/src/file/elm-file-browser.html">
+<link rel="import" href="bower_components/cba-elements/src/job/elm-job-browser.html">
+<link rel="import" href="bower_components/cba-elements/src/elm-cluster-status.html">
+<link rel="import" href="bower_components/cba-elements/src/report/elm-report.html">
 
 
 <link rel="import" href="src/metabolizer-home.html">
@@ -44,12 +44,12 @@
             width: 100%;
         }
 
-        stv-header {
+        elm-header {
             position: absolute;
             top: 0;
         }
 
-        stv-footer {
+        elm-footer {
             position: absolute;
             bottom: 0;
         }
@@ -105,19 +105,19 @@
         }
 
         @media (max-width: 1090px) {
-            stv-header ::content #right .option-text {
+            elm-header ::content #right .option-text {
                 display: none;
             }
         }
 
         @media (max-width: 800px) {
-            stv-header ::content .option-text {
+            elm-header ::content .option-text {
                 font-size: 0.8em;
             }
         }
 
         @media (max-width: 700px) {
-            stv-header ::content .option-text {
+            elm-header ::content .option-text {
                 display: none;
             }
         }
@@ -140,7 +140,7 @@
         module-activity-form,
         module-knockout-form,
         module-prediction-form,
-        stv-report {
+        elm-report {
             height: calc(100vh - 50px);
             overflow-y: auto;
         }
@@ -171,29 +171,29 @@
             <module-prediction-form id="modulePrediction" bioformats="{{bioformats}}" user-data="{{userData}}" on-job-launched="handleJobLaunched" on-jobselect="handleJobSelect"></module-prediction-form>
         </div>
         <div id="jobContent" class="content" menu-option="job">
-            <stv-report id="report" on-select-category="handleSelectCategory" on-select-circuit="handleSelectCircuit"></stv-report>
+            <elm-report id="report" on-select-category="handleSelectCategory" on-select-circuit="handleSelectCircuit"></elm-report>
             <div id="context" hidden></div>
         </div>
         <div class="content" menu-option="home,form,job,module-activity,module-knockout,module-prediction">
-            <stv-panel id="fileBrowserPanel" hidden collapsible movable closable expandible resizable on-hidden="handlePanelHidden">
+            <elm-panel id="fileBrowserPanel" hidden collapsible movable closable expandible resizable on-hidden="handlePanelHidden">
                 <div class="header">
                     <i class="fa fa-cloud"></i>&nbsp; Browse my data
                 </div>
-                <stv-file-browser id="fileBrowser" class="container flex" on-fileselect="handleFileSelect" bioformats="{{bioformats}}" user-data="{{userData}}">
-                </stv-file-browser>
-            </stv-panel>
-            <stv-panel id="jobBrowserPanel" hidden collapsible movable closable resizable on-hidden="handlePanelHidden">
+                <elm-file-browser id="fileBrowser" class="container flex" on-fileselect="handleFileSelect" bioformats="{{bioformats}}" user-data="{{userData}}">
+                </elm-file-browser>
+            </elm-panel>
+            <elm-panel id="jobBrowserPanel" hidden collapsible movable closable resizable on-hidden="handlePanelHidden">
                 <div class="header">
                     <i class="fa fa-flask"></i>&nbsp; Browse my jobs
                 </div>
-                <stv-job-browser id="jobBrowser" class="container flex" on-jobselect="handleJobSelect" allowed-tools="{{allowedTools}}" user-data="{{userData}}" disable-relaunch="{{disableRelaunch}}">
-                </stv-job-browser>
-            </stv-panel>
-            <stv-feedback id="feedback" hidden on-feedbackend="handleFeedback"></stv-feedback>
+                <elm-job-browser id="jobBrowser" class="container flex" on-jobselect="handleJobSelect" allowed-tools="{{allowedTools}}" user-data="{{userData}}" disable-relaunch="{{disableRelaunch}}">
+                </elm-job-browser>
+            </elm-panel>
+            <elm-feedback id="feedback" hidden on-feedbackend="handleFeedback"></elm-feedback>
         </div>
 
 
-        <stv-header id="stvHeader" hide-jobs hide-browse selected-option="{{selectedOption}}" user-data="{{userData}}" on-login="handleLogin" on-logout="handleLogout">
+        <elm-header id="elmHeader" hide-jobs hide-browse selected-option="{{selectedOption}}" user-data="{{userData}}" on-login="handleLogin" on-logout="handleLogout">
             <div class="icon">
                 <!-- <img src="images/Leaf_icon_03.svg" style="height: 54px;margin: 8px 3px 0 0;"> -->
             </div>
@@ -236,13 +236,13 @@
                 <div style="margin-left:2vw;"></div>
             </div>
 
-            <!-- <stv-launcher class="launcher" dropdown-position="left" data-src="conf/test-apps.json">
+            <!-- <elm-launcher class="launcher" dropdown-position="left" data-src="conf/test-apps.json">
                 <i class="fa fa-th"></i>
-            </stv-launcher> -->
+            </elm-launcher> -->
 
-            <stv-cluster-status id="clusterStatus" type="dark" class="cluster-status"></stv-cluster-status>
+            <elm-cluster-status id="clusterStatus" type="dark" class="cluster-status"></elm-cluster-status>
 
-            <stv-dropdown dark class="helpmenu">
+            <elm-dropdown dark class="helpmenu">
                 <div data-button><i class="fa fa-question-circle"></i></div>
                 <ul data-menu>
                     <a href="http://metabolizer.babelomics.org/doc/doku.php" target="_blank">
@@ -272,26 +272,26 @@
                     <!-- <li on-mousedown="handleFeedback">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp; Send an email
                     </li>
-                    <a href="http://gitlab.bioinfo.cipf.es/stevia/stevia-elements/issues" target="_blank">
+                    <a href="http://gitlab.bioinfo.cipf.es/cba/cba-elements/issues" target="_blank">
                         <li>
                             <i class="fa fa-exclamation-circle" aria-hidden="true"></i> &nbsp; Go to git issue
                         </li>
                     </a> -->
                 </ul>
-            </stv-dropdown>
-        </stv-header>
+            </elm-dropdown>
+        </elm-header>
 
-        <stv-footer menu-option="home,login,signup,profile,remember" class="horizontal layout center center-justified" style="padding:0 20px;">
+        <elm-footer menu-option="home,login,signup,profile,remember" class="horizontal layout center center-justified" style="padding:0 20px;">
             <div style="text-align:center;">
                 Metabolizer by <span style="font-weight:bold;">
             Clinical Bioinformatics Area </span> <br> Fundación Progreso y Salud (FPS), Sevilla, Spain 2017</div>
-        </stv-footer>
+        </elm-footer>
     </template>
 
     <script>
         Polymer({
             is: "metabolizer-element",
-            behaviors: [StvApplicationBehavior],
+            behaviors: [elmApplicationBehavior],
             properties: {
                 allowedTools: {
                     type: Array,
@@ -395,9 +395,9 @@
                 }
             },
             handleExample: function(e) {
-                if (this.$.stvHeader.isLogged != true) {
+                if (this.$.elmHeader.isLogged != true) {
                     this._lastExampleRequest = e.currentTarget.dataset['exampleName'];;
-                    this.$.stvHeader.anonymousSign();
+                    this.$.elmHeader.anonymousSign();
                 } else {
                     this.runExample(e.currentTarget.dataset['exampleName']);
                     this.$.jobBrowserPanel.show();
@@ -421,7 +421,7 @@
                         break;
                     default:
                 }
-                SteviaManager.jobs.example({
+                CbaManager.jobs.example({
                     query: {
                         folderName: folderName,
                         tool: 'metabolizer',
@@ -456,8 +456,8 @@
                 this.setMenu('home');
             },
             handleHomeStart: function() {
-                if (this.$.stvHeader.isLogged != true) {
-                    this.$.stvHeader.anonymousSign();
+                if (this.$.elmHeader.isLogged != true) {
+                    this.$.elmHeader.anonymousSign();
                 } else {
                     this.setMenu('module-activity');
                 }

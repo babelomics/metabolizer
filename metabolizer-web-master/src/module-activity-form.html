@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/stevia-elements/src/stv-form-box.html">
+<link rel="import" href="../bower_components/cba-elements/src/elm-form-box.html">
 <dom-module id="module-activity-form">
     <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
          :host {
@@ -43,7 +43,7 @@
             height: 300px;
         }
 
-        stv-select-box {
+        elm-select-box {
             width: 300px;
             height: 80px;
         }
@@ -75,130 +75,130 @@
             </div>
 
             <!-- INPUT DATA -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Input data
                 </div>
                 <div class="container">
-                    <stv-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}" on-ok-click="checkExpFile">
-                    </stv-file-origin>
+                    <elm-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}" on-ok-click="checkExpFile">
+                    </elm-file-origin>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <!-- DESIGN DATA -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Design data
                 </div>
                 <div class="container">
                     <div class="vertical layout">
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="design_type" checked="true" value="categorical" on-click="handleDesignType">
                             <span>Two group comparison</span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="design_type" value="continuous" on-click="handleDesignType">
                             <span>Correlation with continous variable</span>
                         </label>
                         <br>
-                        <stv-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
-                        </stv-file-origin>
+                        <elm-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
+                        </elm-file-origin>
                     </div>
                     <br>
                     <div hidden$="{{!_checkValue('continuous', design_type)}}">Experimental design file: &nbsp;
                         <div class="horizontal layout center" style="padding:5px 0 0 5px;">
                             <div>
-                                <label class="stv">Condition 1:</label>
-                                <stv-select-box id="condition1Select" options="{{designConditions}}" title-attribute="name">
-                                </stv-select-box>
+                                <label class="elm">Condition 1:</label>
+                                <elm-select-box id="condition1Select" options="{{designConditions}}" title-attribute="name">
+                                </elm-select-box>
                             </div>
                             <div style="margin-left:10px;">
-                                <label class="stv">Condition 2:</label>
-                                <stv-select-box id="condition2Select" options="{{designConditions}}" title-attribute="name">
-                                </stv-select-box>
+                                <label class="elm">Condition 2:</label>
+                                <elm-select-box id="condition2Select" options="{{designConditions}}" title-attribute="name">
+                                </elm-select-box>
                             </div>
                         </div>
                     </div>
                     <div hidden$="{{!_checkValue('categorical', design_type)}}">
                         <div>
-                            <label class="stv">Select variable:</label>
-                            <stv-select-box id="variableSelect" options="{{continuousConditions}}" title-attribute="name">
-                            </stv-select-box>
+                            <label class="elm">Select variable:</label>
+                            <elm-select-box id="variableSelect" options="{{continuousConditions}}" title-attribute="name">
+                            </elm-select-box>
                         </div>
                         <br>
                         <div> &nbsp; Correlation method: &nbsp;</div>
                         <div style="margin-left:15px;">
-                            <label class="stv-control">
+                            <label class="elm-control">
                                 <input type="radio" name="methodcor" checked="true" value="spearman">
                                 <span>Spearman</span>
                             </label>
-                            <label class="stv-control">
+                            <label class="elm-control">
                                 <input type="radio" name="methodcor" value="pearson">
                                 <span>Pearson</span>
                             </label>
                         </div>
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
 
             <!-- SPECIES -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Species
                 </div>
                 <div class="container horizontal layout center">
                     <div>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="hsa" checked="true">
                             <span>Human (Homo sapiens)</span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="mmu">
                             <span>Mouse (Mus musculus)</span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="rno">
                             <span>Rat (Rattus norvegicus)</span>
                         </label>
                     </div>
                     <div>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="dre">
                             <span>Zebrafish (Danio rerio) </span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="dme">
                             <span>Fruit fly (Drosophila melanogaster) </span>
                         </label>
-                        <label class="stv-control">
+                        <label class="elm-control">
                             <input type="radio" name="species" value="cel">
                             <span>Worm (Caenorhabditis elegans) </span>
                         </label>
                     </div>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <!-- JOB INFORMATION -->
-            <stv-form-box>
+            <elm-form-box>
                 <div class="header">
                     Job information
                 </div>
                 <div class="container">
                     <div>Output folder: &nbsp;
-                        <stv-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
-                        </stv-file-origin>
+                        <elm-file-origin id="output_folder" selection-mode="folder" bioformats="{{bioformats}}" user-data="{{userData}}">
+                        </elm-file-origin>
                     </div>
                     <br>
-                    <label class="stv">Job name:</label>
-                    <input type="text" id="jobName" class="stv" style="width:200px;" value="Module activity" />
-                    <label class="stv">Description:</label>
-                    <textarea id="jobDescription" class="stv" style="width:200px;"></textarea>
+                    <label class="elm">Job name:</label>
+                    <input type="text" id="jobName" class="elm" style="width:200px;" value="Module activity" />
+                    <label class="elm">Description:</label>
+                    <textarea id="jobDescription" class="elm" style="width:200px;"></textarea>
                 </div>
-            </stv-form-box>
+            </elm-form-box>
 
             <div class="horizontal layout center-justified">
-                <div class="button stv-btn stv-btn-shdw stv-btn-big " on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
+                <div class="button elm-btn elm-btn-shdw elm-btn-big " on-click="launchJob"><i class="fa fa-rocket"></i> &nbsp; Launch Job</div>
             </div>
         </form>
 
@@ -206,7 +206,7 @@
     <script>
         Polymer({
             is: 'module-activity-form',
-            behaviors: [StvFormBehaviour],
+            behaviors: [elmFormBehaviour],
             properties: {
                 design_type: {
                     type: String,
@@ -264,7 +264,7 @@
             },
             _getConditionsFromDesignFile: function(fileId) {
                 var me = this;
-                SteviaManager.getFileContent(fileId, function(content) {
+                CbaManager.getFileContent(fileId, function(content) {
                     var conditionMap = {};
                     var conditionArray = [];
                     var line, fields, field;
@@ -412,7 +412,7 @@
                 if (this.hasErrors == false && this.$.form.checkValidity()) {
                     console.log('Launching');
                     // return;
-                    SteviaManager.jobs.create({
+                    CbaManager.jobs.create({
                         query: query,
                         request: {
                             method: 'POST',
