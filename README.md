@@ -1,4 +1,4 @@
-# metabolizer
+# The Metabolizer
 
 Here you can find the R script of the Metabolizer tool and some toy examples of its usage. 
 In addition to this R code, you can also perform the analysis of the metabolic module activity using the Metabolizer webserver at: http://metabolizer.babelomics.org/
