@@ -8,11 +8,14 @@ https://drive.google.com/file/d/1-k1r5MPqz1yknOnOu1p73t_nzaZrfdSp/view?usp=shari
 
 For each organism you will find: 
 
+*org* is the code of the organism. Check the list of organisms */sharedData/KEGG_organism_codes.txt*
+The organisms which are deleted from KEGG are not modeled. Deleted KEGG organisms: https://www.genome.jp/kegg/docs/updnote.html
+
 > **org_module_data_April2019.RData** (modules in graph format; this file is mandatory for the analysis and used by *metabolizer* function through *moduleinfo* argument. Check https://github.com/babelomics/metabolizer/blob/develop/metabolizer.git/script/analysis/example.R)
 
 > **org_geneIDs.RData** (for gene id conversion; this file is mandatory for the analysis)
 
-> **org_KEGG_module_and_path_table_April2019.txt** and **org_moduleinfo.RData** (detailed table of the modules for this organism; this file is mandatory for the analysis)
+> **org_KEGG_module_and_path_table_April2019.txt** and **org_moduleinfo.RData** (detailed table of the modules for this organism; the file is mandatory for the analysis)
 
 Please, use the following convention to cite Metabolizer tool:
 Cubuk, C., Hidalgo, M., Amadoz, A., Rian, K., Salavert, F., Pujana, M., Mateo, F., Herranz, C., Carbonell-Caballero, J. and Dopazo, J. (2019). Differential metabolic activity and discovery of therapeutic targets using summarized metabolic pathway models. npj Systems Biology and Applications, 5(1), doi: 10.1038/s41540-019-0087-2.
