@@ -15,7 +15,7 @@ For each organism you will find:
 
 > **org_geneIDs.RData** (for gene id conversion; this file is mandatory for the analysis)
 
-> **org_KEGG_module_and_path_table_April2019.txt** and **org_moduleinfo.RData** (detailed table of the modules for this organism; the file is mandatory for the analysis)
+> **org_KEGG_module_and_path_table_April2019.txt** and **org_moduleinfo.RData** (detailed table of the modules for the organism; the file is mandatory for the analysis)
 
 Please, use the following convention to cite Metabolizer tool:
 Cubuk, C., Hidalgo, M., Amadoz, A., Rian, K., Salavert, F., Pujana, M., Mateo, F., Herranz, C., Carbonell-Caballero, J. and Dopazo, J. (2019). Differential metabolic activity and discovery of therapeutic targets using summarized metabolic pathway models. npj Systems Biology and Applications, 5(1), doi: 10.1038/s41540-019-0087-2.
