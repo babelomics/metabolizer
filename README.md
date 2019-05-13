@@ -6,10 +6,10 @@ In addition to this R code, you can also perform the analysis of the metabolic m
 Here you can find the pathway modules of approx. 3400 organisms that are ready for analysis by Metabolizer. 
 https://drive.google.com/file/d/1-k1r5MPqz1yknOnOu1p73t_nzaZrfdSp/view?usp=sharing
 
-For each organism you will find: 
-
 *org* is the code of the organism. Check the list of organisms */sharedData/KEGG_organism_codes.txt*
 The organisms which are deleted from KEGG are not modeled. Deleted KEGG organisms: https://www.genome.jp/kegg/docs/updnote.html
+
+For each organism you will find: 
 
 > **org_module_data_April2019.RData** (modules in graph format; this file is mandatory for the analysis and used by *metabolizer* function through *moduleinfo* argument. Check https://github.com/babelomics/metabolizer/blob/develop/metabolizer.git/script/analysis/example.R)
 
