@@ -395,7 +395,8 @@
                     var conditionMap = {};
                     var conditionArray = [];
                     var line, fields, field;
-                    var lines = content.split('\n');
+                    //var lines = content.split('\n');
+                    var lines = content.split(/\r\n|\r|\n/g);
                     var isNumber;
                     if (lines.length > 0) {
                         for (var i = 0; i < lines.length; i++) {
@@ -419,7 +420,8 @@
                 CbaManager.getFileContent(fileId, function(content) {
                     var sampleArray = [];
                     var line, fields, field, sample, condition;
-                    var lines = content.split('\n');
+                    //var lines = content.split('\n');
+                    var lines = content.split(/\r\n|\r|\n/g);
                     var isNumber;
                     if (lines.length > 0) {
                         for (var i = 0; i < lines.length; i++) {

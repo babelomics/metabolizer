@@ -268,7 +268,8 @@
                     var conditionMap = {};
                     var conditionArray = [];
                     var line, fields, field;
-                    var lines = content.split('\n');
+                    //var lines = content.split('\n');
+                    var lines = content.split(/\r\n|\r|\n/g);
                     var isNumber;
                     var continuousNamesArray = [];
                     if (lines.length > 0) {
