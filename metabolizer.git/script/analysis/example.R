@@ -15,7 +15,8 @@
 
 rm(list=ls())
 
-source("./metabolizer.git/script/utils/functions.main.14032019.R")
+#library(devtools)
+source("https://raw.githubusercontent.com/babelomics/metabolizer/develop/metabolizer.git/script/utils/functions.main.14032019.R")
 load("./metabolizer.git/data//KEGGfiles/hsa/hsa_module_data_March2019.RData")
 
 ### just to create a fake gene expression file: an example input file ###
