@@ -1,7 +1,7 @@
 <style is="custom-style">
     :root {
         --dark-primary-color: #212121;
-        --default-primary-color: #2f2f2f;
+        --default-primary-color: #727272;
         --light-primary-color: #fafafa;
         --light-secondary-color: #EDEDED;
         --text-primary-color: #FFFFFF;
@@ -76,7 +76,24 @@
         text-decoration: underline;
     }
 
-    cba-header > .main {
+    elm-header>.main {
         font-weight: 300;
+        --my-mixin: {
+            font-size: 13px;
+        }
     }
+    @media (max-width: 1260px)  {
+        .option-text{
+            /*display: none;*/
+            font-size: 16px;
+        }
+        /*@media (max-width: 1186px)  {
+            .option-text{
+                display: none;
+            }
+        }*/
+    }
+    .fa-info-circle{
+        color:#F98C60;
+    }  
 </style>

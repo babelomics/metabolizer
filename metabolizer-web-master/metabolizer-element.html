@@ -184,7 +184,7 @@
             </elm-panel>
             <elm-panel id="jobBrowserPanel" hidden collapsible movable closable resizable on-hidden="handlePanelHidden">
                 <div class="header">
-                    <i class="fa fa-flask"></i>&nbsp; Browse my jobs
+                    <i class="fa fa-flask"></i>&nbsp; Browse my studies
                 </div>
                 <elm-job-browser id="jobBrowser" class="container flex" on-jobselect="handleJobSelect" allowed-tools="{{allowedTools}}" user-data="{{userData}}" disable-relaunch="{{disableRelaunch}}">
                 </elm-job-browser>
@@ -195,7 +195,8 @@
 
         <elm-header id="elmHeader" hide-jobs hide-browse selected-option="{{selectedOption}}" user-data="{{userData}}" on-login="handleLogin" on-logout="handleLogout">
             <div class="icon">
-                <!-- <img src="images/Leaf_icon_03.svg" style="height: 54px;margin: 8px 3px 0 0;"> -->
+                 <!-- <img src="images/Leaf_icon_03.svg" style="height: 54px;margin: 8px 3px 0 0;"> -->
+                <img src="images/icon.svg" style="height: 44px;margin: 5px 3px 0 0;">
             </div>
             <div class="title horizontal layout center" style="margin-left:15px;">
                 <span style="font-weight:normal;">Metabolizer</span>
@@ -229,9 +230,9 @@
                     <i class="fa fa-cloud"></i>
                     <span class="option-text">My data</span>
                 </div>
-                <div title="Browse my jobs" class="option" on-click="handleMenuPanel" login-required data-panel="jobBrowserPanel">
+                <div title="Browse my studies" class="option" on-click="handleMenuPanel" login-required data-panel="jobBrowserPanel">
                     <i class="fa fa-flask"></i>
-                    <span class="option-text">My jobs</span>
+                    <span class="option-text">My studies</span>
                 </div>
                 <div style="margin-left:2vw;"></div>
             </div>

@@ -26,11 +26,15 @@
             font-size: 26px;
             margin-bottom: 20px;
         }
-
+        #titleDesc {
+            font-size: 15px;
+        }
         .header {
             text-align: center;
         }
-
+        .info{
+            text-align: right;
+        }
         #tissue {
             overflow-y: scroll;
             height: 200px;
@@ -72,14 +76,22 @@
         <form id="form">
             <div id="title">
                 Module Activity
+                <br>
+                <span id="titleDesc"> compare the module activity value between different conditions.</span>
             </div>
-
+            <div class="horizontal layout center-justified exampleBtn">
+                <div class="elm-btn elm-btn-shdw" on-click="runExample"><i class="fa fa-flask"></i> &nbsp; Run example</div>
+            </div>
             <!-- INPUT DATA -->
             <elm-form-box>
                 <div class="header">
                     Input data
                 </div>
+                <div class="info">
+                    <a title="Use the file browse button to upload an expression matrix file." href="http://metabolizer.babelomics.org/doc/doku.php?id=expression_matrix_file_format"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+                </div>
                 <div class="container">
+                    <strong>Expression matrix</strong>
                     <elm-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}" on-ok-click="checkExpFile">
                     </elm-file-origin>
                 </div>
@@ -89,6 +101,9 @@
             <elm-form-box>
                 <div class="header">
                     Design data
+                </div>
+                <div class="info">
+                    <a title="The design data panel allows you to choose the kind of experiment you want to perform. You can choose between three kinds of experimental design" href="http://metabolizer.babelomics.org/doc/doku.php?id=experimental_design_file_format"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
                 </div>
                 <div class="container">
                     <div class="vertical layout">
@@ -147,6 +162,9 @@
                 <div class="header">
                     Species
                 </div>
+                <div class="info">
+                    <a title="Here we must choose the species of our experiment." href="http://metabolizer.babelomics.org/doc/doku.php?id=species"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+                </div>
                 <div class="container horizontal layout center">
                     <div>
                         <label class="elm-control">
@@ -182,7 +200,10 @@
             <!-- JOB INFORMATION -->
             <elm-form-box>
                 <div class="header">
-                    Job information
+                    Study information
+                </div>
+                <div class="info">
+                    <a title="This panel includes some parameters in order to identify and save our study." href="http://metabolizer.babelomics.org/doc/doku.php?id=job_information"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
                 </div>
                 <div class="container">
                     <div>Output folder: &nbsp;
@@ -190,7 +211,7 @@
                         </elm-file-origin>
                     </div>
                     <br>
-                    <label class="elm">Job name:</label>
+                    <label class="elm">Study name:</label>
                     <input type="text" id="jobName" class="elm" style="width:200px;" value="Module activity" />
                     <label class="elm">Description:</label>
                     <textarea id="jobDescription" class="elm" style="width:200px;"></textarea>
@@ -438,6 +459,33 @@
                     });
                 }
             },
+            runExample: function() {
+                var me = this;
+                var folderName = 'Module_activity_BRCA-1';
+                CbaManager.jobs.example({
+                    query: {
+                        folderName: folderName,
+                        tool: 'metabolizer',
+                        execution: 'example'
+                    },
+                    request: {
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.response[0].error == null) {
+                                console.log(response);
+                                me.clean();
+                                me.fire('job-launched');
+                                me.fire('need-refresh');
+                            } else {
+                                console.log(response.response[0].error);
+                            }
+                        },
+                        error: function() {
+                            console.log('Server error, try again later.');
+                        }
+                    }
+                });
+            }
         })
     </script>
 </dom-module>

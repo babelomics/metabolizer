@@ -26,7 +26,9 @@
             font-size: 26px;
             margin-bottom: 20px;
         }
-
+        #titleDesc {
+            font-size: 15px;
+        }
         .header {
             text-align: center;
         }
@@ -82,14 +84,22 @@
 
             <div id="title">
                 Module Knockout
+                <br>
+                <span id="titleDesc">Simulate effect of knockout (KO) and/or over-expression (OE) of one or several genes or the effect of drug(s) in the activity of metabolic modules.</span>
             </div>
-
+            <div class="horizontal layout center-justified exampleBtn">
+                <div class="elm-btn elm-btn-shdw" on-click="runExample"><i class="fa fa-flask"></i> &nbsp; Run example</div>
+            </div>
             <!-- INPUT DATA -->
             <elm-form-box>
                 <div class="header">
                     Input data
                 </div>
+                <div class="info">
+                    <a title="Use the file browse button to upload an expression matrix file." href="http://metabolizer.babelomics.org/doc/doku.php?id=expression_matrix_file_format"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+                </div>
                 <div class="container">
+                    <strong>Expression matrix</strong>
                     <elm-file-origin id="exp_file" selection-mode="file" bioformats="{{matrixBioformat}}" user-data="{{userData}}" on-ok-click="checkExpFile">
                     </elm-file-origin>
                     <div hidden$="{{!checkSampleCount(expFileSampleCount)}}">
@@ -102,6 +112,9 @@
             <elm-form-box disabled$="{{checkSampleCount2(expFileSampleCount)}}">
                 <div class="header">
                     Design data
+                </div>
+                <div class="info">
+                    <a title="The design data panel allows you to choose the kind of experiment you want to perform. You can choose between three kinds of experimental design" href="http://metabolizer.babelomics.org/doc/doku.php?id=experimental_design_file_format"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
                 </div>
                 <div class="container vertical layout flex">
                     <elm-file-origin id="design_file" selection-mode="file" bioformats="{{designBioformat}}" user-data="{{userData}}" on-ok-click="checkDesignFile">
@@ -143,6 +156,9 @@
                 <div class="header">
                     Species
                 </div>
+                <div class="info">
+                    <a title="Here we must choose the species of our experiment." href="http://metabolizer.babelomics.org/doc/doku.php?id=species"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+                </div>                
                 <div class="container horizontal layout center">
                     <div>
                         <label class="elm-control">
@@ -180,6 +196,9 @@
                 <div class="header">
                     Auto Knockout
                 </div>
+                <div class="info">
+                    <a title="In-silico knockout and over expression" href="http://metabolizer.babelomics.org/doc/doku.php?id=in-silico_knockout:over_expression"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+                </div>
                 <div class="container">
                     <label class="elm-control">
                         <input id="autoCheckbox" type="checkbox" name="auto" on-change="handleAutoknockChange">
@@ -194,7 +213,10 @@
 
             <elm-form-box>
                 <div class="header">
-                    Job information
+                    Study information
+                </div>
+                <div class="info">
+                    <a title="This panel includes some parameters in order to identify and save our study." href="http://metabolizer.babelomics.org/doc/doku.php?id=job_information"  target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
                 </div>
                 <div class="container">
                     <div>Output folder: &nbsp;
@@ -203,7 +225,7 @@
                         <span id="output_folderError" class="errmsg"></span>
                     </div>
                     <br>
-                    <label class="elm">Job name:</label>
+                    <label class="elm">Study name:</label>
                     <input type="text" id="jobName" class="elm" style="width:200px;" value="Module knockout" />
                     <label class="elm">Description:</label>
                     <textarea id="jobDescription" class="elm" style="width:200px;"></textarea>
@@ -548,6 +570,34 @@
             //     };
             //     this._createJob(query, args);
             // },
+
+            runExample: function() {
+                var me = this;
+                var folderName = 'Module_knockout_Auto_KO_BRCA';
+                CbaManager.jobs.example({
+                    query: {
+                        folderName: folderName,
+                        tool: 'metabolizer',
+                        execution: 'example'
+                    },
+                    request: {
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.response[0].error == null) {
+                                console.log(response);
+                                me.clean();
+                                me.fire('job-launched');
+                                me.fire('need-refresh');
+                            } else {
+                                console.log(response.response[0].error);
+                            }
+                        },
+                        error: function() {
+                            console.log('Server error, try again later.');
+                        }
+                    }
+                });
+            }
         });
     </script>
 </dom-module>
