@@ -10,9 +10,9 @@
     "dependencies": {
         "polymer": "Polymer/polymer#1.8.1",
         "fontawesome": "4.7.0",
-        "cba-elements": "https://github.com/kinzaR/cba-elements.git",
-        "network-viewer": "https://github.com/babelomics/network-viewer.git#develop",
-        "pathway-viewer": "https://github.com/babelomics/pathway-viewer.git#develop"
+        "cba-elements": "https://github.com/kinzaR/cba-elements.git#v1.7",
+        "network-viewer": "https://github.com/babelomics/network-viewer.git#v1.7",
+        "pathway-viewer": "https://github.com/babelomics/pathway-viewer.git#v1.7"
     },
     "private": true
 }
