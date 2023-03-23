@@ -266,7 +266,8 @@ node_vals<-function(graphobject,KEGG_met_path_node,rxn_vals_mat,default_value){
         return(calc_comp)    
       })
       
-      if(class(node_comp)=="list"){
+      # if(class(node_comp)=="list"){
+      if(inherits(node_comp, "list")){
         node_comp <- node_comp[sapply(node_comp,function(x) !is.null(x))]
         node_comp  <- do.call("rbind",node_comp)
       }else{ node_comp <- t(node_comp) }
@@ -277,7 +278,8 @@ node_vals<-function(graphobject,KEGG_met_path_node,rxn_vals_mat,default_value){
       if(length(isoenzymes_rxn)>0){
         isoenzymes_rxn <- isoenzymes_rxn[isoenzymes_rxn %in% rownames(rxn_vals_mat)]
         node_iso <- rxn_vals_mat[which(rownames(rxn_vals_mat) %in% isoenzymes_rxn),]
-        if(class(node_iso)=="numeric") { node_iso <- t(as.matrix(node_iso)) }
+        # if(class(node_iso)=="numeric") { node_iso <- t(as.matrix(node_iso)) }
+        if(inherits(node_iso, "numeric")) { node_iso <- t(as.matrix(node_iso)) }
         if(nrow(node_iso)==0){ node_iso<-NULL }
       }else{node_iso<-NULL}
       
