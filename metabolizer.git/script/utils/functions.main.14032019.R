@@ -300,9 +300,13 @@ node_vals<-function(graphobject,KEGG_met_path_node,rxn_vals_mat,default_value){
     return(calculated_node_val) 
   } )
   
-  if(class(y1)=="matrix"){
+  ## class() gives following error in R.4.0 and later versions: Error in if (class(y1) == "matrix") { : the condition has length > 1
+  # if(class(y1)=="matrix"){
+  #   node.vals <- t(y1)
+  # }else if(class(y1)=="list"){ 
+  if(inherits(y1, "matrix")){
     node.vals <- t(y1)
-  }else if(class(y1)=="list"){ 
+  }else if(inherits(y1,"list")){
     node.vals <- do.call(what="rbind",y1)
   }else{ node.vals <- mat.or.vec(nr = length(y1) ,nc = ncol(rxn_vals_mat))
   colnames(node.vals) <- colnames(rxn_vals_mat)
